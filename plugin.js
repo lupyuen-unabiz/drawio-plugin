@@ -17,7 +17,8 @@ Draw.loadPlugin(function (ui) {
         var cell = evt.getProperty('cell'); // cell may be null
         layerX = e.layerX;
         layerY = e.layerY;
-        console.log({ layerX: layerX, layerY: layerY, e: e, cell: cell });
+        console.log(e.clientX, e.layerX, e.offsetX, e.screenX, e.x);
+        // console.log({ layerX, layerY, e, cell });
         if (cell) {
             // Do something useful with cell and consume the event
             // evt.consume();
