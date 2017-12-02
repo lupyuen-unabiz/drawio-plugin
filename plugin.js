@@ -85,7 +85,8 @@ Draw.loadPlugin(function (ui) {
             // Do something useful with cell and consume the event
             // evt.consume();
         }
-        addFrame(ui.editor.graph);
+        //  Update the UnaRadar frame.
+        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 1000);
     });
     // Adds resources for actions
     mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');

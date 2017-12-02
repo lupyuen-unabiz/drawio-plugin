@@ -101,7 +101,8 @@ Draw.loadPlugin(function (ui: mxApp) {
       // Do something useful with cell and consume the event
       // evt.consume();
     }
-    addFrame(ui.editor.graph);
+    //  Update the UnaRadar frame.
+    window.setTimeout(() => addFrame(ui.editor.graph), 1000);
   });
 
   // Adds resources for actions
