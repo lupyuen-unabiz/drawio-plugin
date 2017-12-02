@@ -16,7 +16,7 @@ function fetchData() {
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200)
             return;
-        console.log("Success: " + r.responseText);
+        console.log(url + ": " + r.responseText);
     };
     // r.send("banana=yellow");
     r.send();
