@@ -3,11 +3,21 @@
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
+// import * as mxEditor from './mxgraph/editor/mxEditor';
+var mxApp = (function () {
+    function mxApp() {
+    }
+    return mxApp;
+}());
 Draw.loadPlugin(function (ui) {
+    var layerX = 0;
+    var layerY = 0;
     ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
         var e = evt.getProperty('event'); // mouse event
         var cell = evt.getProperty('cell'); // cell may be null
-        console.log({ e: e, cell: cell });
+        layerX = e.layerX;
+        layerY = e.layerY;
+        console.log({ layerX: layerX, layerY: layerY, e: e, cell: cell });
         if (cell) {
             // Do something useful with cell and consume the event
             // evt.consume();
@@ -51,11 +61,12 @@ Draw.loadPlugin(function (ui) {
             var screenX_1 = theGraph.popupMenuHandler.screenX;
             var screenY_1 = theGraph.popupMenuHandler.screenY;
             console.log({
+                layerX: layerX, layerY: layerY,
                 x: x, y: y, stx: stx, sty: sty, posx: posx, posy: posy,
                 theGraph: theGraph,
                 obj: this
             });
-            var newElement = new mxCell("", new mxGeometry(x, y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var newElement = new mxCell("", new mxGeometry(layerX, layerY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
@@ -80,4 +91,3 @@ Draw.loadPlugin(function (ui) {
     ui.menubar.container
         .insertBefore(ui.menubar.container.lastChild, ui.menubar.container.lastChild.previousSibling.previousSibling);
 });
-//# sourceMappingURL=plugin.js.map

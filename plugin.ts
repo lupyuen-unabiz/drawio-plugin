@@ -3,12 +3,24 @@
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
-Draw.loadPlugin(function (ui) {
+
+// import * as mxEditor from './mxgraph/editor/mxEditor';
+
+class mxApp {
+  editor: mxEditor
+}
+
+Draw.loadPlugin(function (ui: mxApp) {
+  let layerX = 0;
+  let layerY = 0;
+
   ui.editor.graph.addListener(mxEvent.CLICK, function(sender, evt)
   {
     const e = evt.getProperty('event'); // mouse event
     const cell = evt.getProperty('cell'); // cell may be null
-    console.log({ e, cell });
+    layerX = e.layerX;
+    layerY = e.layerY;
+    console.log({ layerX, layerY, e, cell });
     if (cell)
     {
       // Do something useful with cell and consume the event
@@ -57,11 +69,12 @@ Draw.loadPlugin(function (ui) {
       const screenX = theGraph.popupMenuHandler.screenX;
       const screenY = theGraph.popupMenuHandler.screenY;
       console.log({
+        layerX, layerY,
         x, y, stx, sty, posx, posy,
         theGraph,
         obj: this});
       const newElement = new mxCell("",
-        new mxGeometry(x, y, 80, 80),
+        new mxGeometry(layerX, layerY, 80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));
