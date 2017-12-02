@@ -86,11 +86,11 @@ Draw.loadPlugin(function (ui: mxApp) {
   let layerY = 0;
 
   //  Add the UnaRadar frame.
-  window.setTimeout(() => addFrame(ui.editor.graph), 10 * 1000);
+  //  window.setTimeout(() => addFrame(ui.editor.graph), 0);
 
   ui.editor.graph.addListener(mxEvent.SIZE, function(sender, evt) {
-    //  Update the UnaRadar frame.
-    window.setTimeout(() => addFrame(ui.editor.graph), 1000);
+    //  Update the UnaRadar frame upon resize.
+    window.setTimeout(() => addFrame(ui.editor.graph), 0);
   });
 
   //  Add the click listener to get click position.
@@ -106,7 +106,7 @@ Draw.loadPlugin(function (ui: mxApp) {
       // evt.consume();
     }
     //  Update the UnaRadar frame.
-    window.setTimeout(() => addFrame(ui.editor.graph), 1000);
+    window.setTimeout(() => addFrame(ui.editor.graph), 0);
   });
 
   // Adds resources for actions

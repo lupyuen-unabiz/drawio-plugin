@@ -72,10 +72,10 @@ Draw.loadPlugin(function (ui) {
     var layerX = 0;
     var layerY = 0;
     //  Add the UnaRadar frame.
-    window.setTimeout(function () { return addFrame(ui.editor.graph); }, 10 * 1000);
+    //  window.setTimeout(() => addFrame(ui.editor.graph), 0);
     ui.editor.graph.addListener(mxEvent.SIZE, function (sender, evt) {
-        //  Update the UnaRadar frame.
-        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 1000);
+        //  Update the UnaRadar frame upon resize.
+        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 0);
     });
     //  Add the click listener to get click position.
     ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
@@ -90,7 +90,7 @@ Draw.loadPlugin(function (ui) {
             // evt.consume();
         }
         //  Update the UnaRadar frame.
-        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 1000);
+        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 0);
     });
     // Adds resources for actions
     mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
