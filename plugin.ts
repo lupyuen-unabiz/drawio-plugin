@@ -40,12 +40,12 @@ Draw.loadPlugin(function (ui) {
       const screenX = theGraph.popupMenuHandler.screenX;
       const screenY = theGraph.popupMenuHandler.screenY;
       console.log({
-        screenX, screenY,
-        'getInsertPoint.x': getInsertPoint.x,
-        'getInsertPoint.y': getInsertPoint.y,
-        'pos.x': pos.x,
-        'pos.y': pos.y,
-        lastMouseX, lastMouseY,
+        sx: screenX, sy: screenY,
+        ix: getInsertPoint.x,
+        iy: getInsertPoint.y,
+        px: pos.x,
+        py: pos.y,
+        lx: lastMouseX, ly: lastMouseY,
         theGraph,
         obj: this});
       const newElement = new mxCell("",
