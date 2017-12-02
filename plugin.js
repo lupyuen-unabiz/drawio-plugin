@@ -1,11 +1,11 @@
 /**
  * A draw.io plugin for inserting a custom text (or ellipse) element,
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
-https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
+ https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 Draw.loadPlugin(function (ui) {
     /* Finding assigned keys:
-
+  
       * Open javascript console
       * Draw.valueOf()
       * Traverse to: Object > loadPlugin > <function scope>
@@ -34,7 +34,9 @@ Draw.loadPlugin(function (ui) {
             var lastMouseX = theGraph.lastMouseX;
             var lastMouseY = theGraph.lastMouseY;
             var getInsertPoint = theGraph.getInsertPoint();
-            console.log({ getInsertPoint: getInsertPoint, pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
+            var triggerX = theGraph.popupMenuHandler.triggerX;
+            var triggerY = theGraph.popupMenuHandler.triggerY;
+            console.log({ triggerX: triggerX, triggerY: triggerY, getInsertPoint: getInsertPoint, pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
             var newElement = new mxCell("", new mxGeometry(getInsertPoint.x, getInsertPoint.y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
