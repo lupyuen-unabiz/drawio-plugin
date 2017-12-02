@@ -10,7 +10,7 @@ var mxApp = (function () {
     return mxApp;
 }());
 function fetchData() {
-    var url = 'https://lupyuen-unabiz.github.io/data.json';
+    var url = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
     var r = new XMLHttpRequest();
     r.open("POST", "path/to/api", true);
     r.onreadystatechange = function () {
