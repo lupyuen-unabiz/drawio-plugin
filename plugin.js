@@ -144,6 +144,9 @@ Draw.loadPlugin(function (ui) {
         // const style = "ellipse;whiteSpace=wrap;html=1;";
         var graph = ui.editor.graph;
         if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
+            //  Get data from server.
+            fetchData();
+            //  Get the graph view parameters.
             var scale = graph.view.scale;
             var translateX = graph.view.translate.x;
             var translateY = graph.view.translate.y;
@@ -177,8 +180,6 @@ Draw.loadPlugin(function (ui) {
             parent_1.insert(child);
             //  Add the parent.
             graph.setSelectionCell(graph.addCell(parent_1));
-            //  Get data from server.
-            fetchData();
         }
     }, null, null, "Ctrl+ShiftR");
     ui.keyHandler.bindAction(81, !0, "recordRSSI", !0);

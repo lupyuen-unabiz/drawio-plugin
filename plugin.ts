@@ -163,6 +163,10 @@ Draw.loadPlugin(function (ui: mxApp) {
     // const style = "ellipse;whiteSpace=wrap;html=1;";
     const graph = ui.editor.graph;
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
+      //  Get data from server.
+      fetchData();
+
+      //  Get the graph view parameters.
       const scale = graph.view.scale;
       const translateX = graph.view.translate.x;
       const translateY = graph.view.translate.y;
@@ -199,9 +203,6 @@ Draw.loadPlugin(function (ui: mxApp) {
 
       //  Add the parent.
       graph.setSelectionCell(graph.addCell(parent));
-
-      //  Get data from server.
-      fetchData();
     }
   }, null, null, "Ctrl+ShiftR");
 
