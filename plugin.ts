@@ -40,8 +40,10 @@ Draw.loadPlugin(function (ui) {
       const screenX = theGraph.popupMenuHandler.screenX;
       const screenY = theGraph.popupMenuHandler.screenY;
       console.log({
-        lx: lastMouseX, ly: lastMouseY,
-        sx: screenX, sy: screenY,
+        stx: theGraph.panningHandler.startX,
+        dx: theGraph.panningHandler.dx,
+        // lx: lastMouseX, ly: lastMouseY,
+        sx: screenX, // sy: screenY,
         ix: getInsertPoint.x, iy: getInsertPoint.y,
         px: pos.x, py: pos.y,
         theGraph,
