@@ -31,8 +31,8 @@ Draw.loadPlugin(function (ui) {
         var theGraph = ui.editor.graph;
         if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
             var pos = theGraph.getInsertPoint();
-            var lastMouseX = this.lastMouseX;
-            var lastMouseY = this.lastMouseY;
+            var lastMouseX = theGraph.lastMouseX;
+            var lastMouseY = theGraph.lastMouseY;
             console.log({ pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
             var newElement = new mxCell("", new mxGeometry(lastMouseX, lastMouseY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;

@@ -33,9 +33,9 @@ Draw.loadPlugin(function(ui) {
     ui.actions.addAction('myInsertEllipse', function() {
         var theGraph = ui.editor.graph;
         if(theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())){
-            var pos=theGraph.getInsertPoint();
-            const lastMouseX = this.lastMouseX;
-            const lastMouseY = this.lastMouseY;
+            var pos = theGraph.getInsertPoint();
+            const lastMouseX = theGraph.lastMouseX;
+            const lastMouseY = theGraph.lastMouseY;
             console.log({ pos, theGraph, obj: this, lastMouseX, lastMouseY });
             var newElement=new mxCell("",
                 new mxGeometry(lastMouseX, lastMouseY, 80, 80),
