@@ -34,10 +34,10 @@ Draw.loadPlugin(function (ui) {
             var lastMouseX = theGraph.lastMouseX;
             var lastMouseY = theGraph.lastMouseY;
             var getInsertPoint = theGraph.getInsertPoint();
-            var triggerX = theGraph.popupMenuHandler.triggerX;
-            var triggerY = theGraph.popupMenuHandler.triggerY;
-            console.log({ triggerX: triggerX, triggerY: triggerY, getInsertPoint: getInsertPoint, pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
-            var newElement = new mxCell("", new mxGeometry(triggerX, triggerY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var screenX_1 = theGraph.popupMenuHandler.screenX;
+            var screenY_1 = theGraph.popupMenuHandler.screenY;
+            console.log({ screenX: screenX_1, screenY: screenY_1, getInsertPoint: getInsertPoint, pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
+            var newElement = new mxCell("", new mxGeometry(screenX_1, screenY_1, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
