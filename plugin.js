@@ -45,6 +45,7 @@ function addFrame(theGraph) {
         frame.id = frameID;
         frame.src = frameURL;
         frame.scrolling = 'no';
+        frame.allow = 'geolocation; microphone; camera';
         frame.style.position = 'absolute';
         frame.style.left = htmlX + 'px';
         frame.style.top = htmlY + 'px';
