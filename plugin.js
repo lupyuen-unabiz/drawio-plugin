@@ -31,6 +31,7 @@ Draw.loadPlugin(function (ui) {
         var theGraph = ui.editor.graph;
         if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
             var pos = theGraph.getInsertPoint();
+            console.log({ pos: pos });
             var newElement = new mxCell("", new mxGeometry(pos.x, pos.y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
