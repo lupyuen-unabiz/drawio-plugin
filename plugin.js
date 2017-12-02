@@ -4,6 +4,15 @@
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 Draw.loadPlugin(function (ui) {
+    ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
+        var e = evt.getProperty('event'); // mouse event
+        var cell = evt.getProperty('cell'); // cell may be null
+        console.log({ e: e, cell: cell });
+        if (cell) {
+            // Do something useful with cell and consume the event
+            // evt.consume();
+        }
+    });
     /* Finding assigned keys:
   
       * Open javascript console
@@ -14,8 +23,8 @@ Draw.loadPlugin(function (ui) {
     */
     // Adds resources for actions
     mxResources.parse('myInsertText=Insert text element');
-    mxResources.parse('myInsertEllipse=Insert ellipse');
-    // Adds popup menu : myInsertText, myInsertEllipse
+    mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
+    // Adds popup menu : myInsertText, recordRSSI
     var uiCreatePopupMenu = ui.menus.createPopupMenu;
     ui.menus.createPopupMenu = function (menu, cell, evt) {
         uiCreatePopupMenu.apply(this, arguments);
@@ -23,11 +32,11 @@ Draw.loadPlugin(function (ui) {
         // if (graph.model.isVertex(graph.getSelectionCell()))
         {
             this.addMenuItems(menu, ['-', 'myInsertText'], null, evt);
-            this.addMenuItems(menu, ['-', 'myInsertEllipse'], null, evt);
+            this.addMenuItems(menu, ['-', 'recordRSSI'], null, evt);
         }
     };
-    // Adds action : myInsertEllipse
-    ui.actions.addAction('myInsertEllipse', function () {
+    // Adds action : recordRSSI
+    ui.actions.addAction('recordRSSI', function () {
         var theGraph = ui.editor.graph;
         if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
             var pos = theGraph.getInsertPoint();
@@ -51,7 +60,7 @@ Draw.loadPlugin(function (ui) {
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
     }, null, null, "Ctrl+ShiftR");
-    ui.keyHandler.bindAction(81, !0, "myInsertEllipse", !0);
+    ui.keyHandler.bindAction(81, !0, "recordRSSI", !0);
     ui.actions.addAction('myInsertText', function () {
         var theGraph = ui.editor.graph;
         if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
@@ -63,9 +72,9 @@ Draw.loadPlugin(function (ui) {
     }, null, null, "Ctrl+Shift+T");
     ui.keyHandler.bindAction(84, !0, "myInsertText", !0);
     // Adds menu
-    ui.menubar.addMenu('My Menu', function (menu, parent) {
+    ui.menubar.addMenu('UnaRadar', function (menu, parent) {
         ui.menus.addMenuItem(menu, 'myInsertText');
-        ui.menus.addMenuItem(menu, 'myInsertEllipse');
+        ui.menus.addMenuItem(menu, 'recordRSSI');
     });
     // Reorders menubar
     ui.menubar.container
