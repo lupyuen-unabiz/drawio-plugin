@@ -85,6 +85,10 @@ Draw.loadPlugin(function (ui: mxApp) {
   let layerX = 0;
   let layerY = 0;
 
+  // Adds resources for actions
+  mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
+  // mxResources.parse('myInsertText=Insert text element');
+
   //  Add the UnaRadar frame.
   //  window.setTimeout(() => addFrame(ui.editor.graph), 0);
 
@@ -108,10 +112,6 @@ Draw.loadPlugin(function (ui: mxApp) {
     //  Update the UnaRadar frame.
     window.setTimeout(() => addFrame(ui.editor.graph), 0);
   });
-
-  // Adds resources for actions
-  mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
-  // mxResources.parse('myInsertText=Insert text element');
 
   // Adds popup menu : myInsertText, recordRSSI
   var uiCreatePopupMenu = ui.menus.createPopupMenu;

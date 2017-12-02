@@ -71,6 +71,9 @@ function mxToHTML(mxX, mxY, translateX, translateY, scale) {
 Draw.loadPlugin(function (ui) {
     var layerX = 0;
     var layerY = 0;
+    // Adds resources for actions
+    mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
+    // mxResources.parse('myInsertText=Insert text element');
     //  Add the UnaRadar frame.
     //  window.setTimeout(() => addFrame(ui.editor.graph), 0);
     ui.editor.graph.addListener(mxEvent.SIZE, function (sender, evt) {
@@ -92,9 +95,6 @@ Draw.loadPlugin(function (ui) {
         //  Update the UnaRadar frame.
         window.setTimeout(function () { return addFrame(ui.editor.graph); }, 0);
     });
-    // Adds resources for actions
-    mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
-    // mxResources.parse('myInsertText=Insert text element');
     // Adds popup menu : myInsertText, recordRSSI
     var uiCreatePopupMenu = ui.menus.createPopupMenu;
     ui.menus.createPopupMenu = function (menu, cell, evt) {
