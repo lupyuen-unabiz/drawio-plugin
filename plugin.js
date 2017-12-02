@@ -174,6 +174,8 @@ Draw.loadPlugin(function (ui) {
             var parentRSSI = rssiData[0].rssi;
             var parentValue = "RSSI " + parentRSSI + " dBm\n" + localtimestr;
             var parentGeometry = new mxGeometry(x, y, parentWidth_1, parentHeight);
+            //  Set the collapsed parent dimensions.
+            parentGeometry.alternateBounds = { x: x, y: y, width: parentWidth_1, height: startSize };
             var parent_1 = new mxCell(parentValue, parentGeometry, parentStyle);
             parent_1.vertex = !0;
             parent_1.setId(parentId);
