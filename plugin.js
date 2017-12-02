@@ -38,15 +38,16 @@ Draw.loadPlugin(function (ui) {
             var screenY_1 = theGraph.popupMenuHandler.screenY;
             console.log({
                 stx: theGraph.panningHandler.startX,
-                dx: theGraph.panningHandler.dx,
+                sty: theGraph.panningHandler.startY,
+                ix: getInsertPoint.x, iy: getInsertPoint.y,
+                // dx: theGraph.panningHandler.dx,
                 // lx: lastMouseX, ly: lastMouseY,
                 sx: screenX_1,
-                ix: getInsertPoint.x, iy: getInsertPoint.y,
                 px: pos.x, py: pos.y,
                 theGraph: theGraph,
                 obj: this
             });
-            var newElement = new mxCell("", new mxGeometry(screenX_1, screenY_1, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var newElement = new mxCell("", new mxGeometry(theGraph.panningHandler.startX, theGraph.panningHandler.startY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
