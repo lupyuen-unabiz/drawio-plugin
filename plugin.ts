@@ -31,20 +31,25 @@ Draw.loadPlugin(function (ui) {
 
   // Adds action : myInsertEllipse
   ui.actions.addAction('myInsertEllipse', function () {
-    var theGraph = ui.editor.graph;
+    const theGraph = ui.editor.graph;
     if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
-      var pos = theGraph.getInsertPoint();
+      const pos = theGraph.getInsertPoint();
       const lastMouseX = theGraph.lastMouseX;
       const lastMouseY = theGraph.lastMouseY;
       const getInsertPoint = theGraph.getInsertPoint();
       const screenX = theGraph.popupMenuHandler.screenX;
       const screenY = theGraph.popupMenuHandler.screenY;
-      console.log({screenX, screenY, getInsertPoint, pos, theGraph, obj: this, lastMouseX, lastMouseY});
-      /* var newElement = new mxCell("",
-        new mxGeometry(screenX, screenY, 80, 80),
-        "ellipse;whiteSpace=wrap;html=1;"); */
+      console.log({
+        screenX, screenY,
+        'getInsertPoint.x': getInsertPoint.x,
+        'getInsertPoint.y': getInsertPoint.y,
+        'pos.x': pos.x,
+        'pos.y': pos.y,
+        lastMouseX, lastMouseY,
+        theGraph,
+        obj: this});
       const newElement = new mxCell("",
-        null,
+        new mxGeometry(screenX, screenY, 80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));
