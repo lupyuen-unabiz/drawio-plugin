@@ -4,22 +4,65 @@
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 // import * as mxEditor from './mxgraph/editor/mxEditor';
+var dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
+var frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';
+var frameID = 'UnaRadarFrame';
 var mxApp = (function () {
     function mxApp() {
     }
     return mxApp;
 }());
 function fetchData() {
-    var url = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
     var r = new XMLHttpRequest();
-    r.open("GET", url, true);
+    r.open("GET", dataURL, true);
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200)
             return;
-        console.log(url + ": " + r.responseText);
+        console.log(dataURL + ": " + r.responseText);
     };
     // r.send("banana=yellow");
     r.send();
+}
+function addFrame(theGraph) {
+    if (!theGraph || !theGraph.model || !theGraph.model.cells
+        || !theGraph.model.cells.UnaRadarFrame
+        || !theGraph.model.cells.UnaRadarFrame.geometry)
+        return;
+    var view = theGraph.view;
+    var scale = view.scale;
+    var translateX = view.translate.x;
+    var translateY = view.translate.y;
+    var geometry = theGraph.model.cells.UnaRadarFrame.geometry;
+    var mxX = geometry.x;
+    var mxY = geometry.y;
+    var mxWidth = geometry.width;
+    var mxHeight = geometry.height;
+    var _a = mxToHTML(mxX, mxY, translateX, translateY, scale), htmlX = _a.htmlX, htmlY = _a.htmlY;
+    var frame = document.getElementById(frameID);
+    if (!frame) {
+        frame = document.createElement('iframe');
+        frame.id = frameID;
+        frame.src = frameURL;
+        frame.style.left = htmlX + 'px';
+        frame.style.top = htmlY + 'px';
+        frame.style.width = (mxWidth * scale) + 'px';
+        frame.style.height = (mxHeight * scale) + 'px';
+        theGraph.container.appendChild(frame);
+    }
+    frame.style.left = htmlX + 'px';
+    frame.style.top = htmlY + 'px';
+    frame.style.width = (mxWidth * scale) + 'px';
+    frame.style.height = (mxHeight * scale) + 'px';
+}
+function htmlToMX(htmlX, htmlY, translateX, translateY, scale) {
+    var x = (htmlX / scale) - translateX;
+    var y = (htmlY / scale) - translateY;
+    return { x: x, y: y };
+}
+function mxToHTML(mxX, mxY, translateX, translateY, scale) {
+    var htmlX = (mxX + translateX) * scale;
+    var htmlY = (mxY + translateY) * scale;
+    return { htmlX: htmlX, htmlY: htmlY };
 }
 Draw.loadPlugin(function (ui) {
     var layerX = 0;
@@ -35,6 +78,7 @@ Draw.loadPlugin(function (ui) {
             // Do something useful with cell and consume the event
             // evt.consume();
         }
+        addFrame(ui.editor.graph);
     });
     /* Finding assigned keys:
   
@@ -76,8 +120,7 @@ Draw.loadPlugin(function (ui) {
             var scale = theGraph.view.scale;
             var translateX = theGraph.view.translate.x;
             var translateY = theGraph.view.translate.y;
-            var x = (layerX / scale) - translateX;
-            var y = (layerY / scale) - translateY;
+            var _a = htmlToMX(layerX, layerY, translateX, translateY, scale), x = _a.x, y = _a.y;
             console.log({
                 x: x, y: y,
                 layerX: layerX, layerY: layerY,

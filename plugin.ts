@@ -6,20 +6,71 @@
 
 // import * as mxEditor from './mxgraph/editor/mxEditor';
 
+const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
+const frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';
+const frameID = 'UnaRadarFrame';
+
 class mxApp {
   editor: mxEditor
 }
 
 function fetchData() {
-  const url = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
   var r = new XMLHttpRequest();
-  r.open("GET", url, true);
+  r.open("GET", dataURL, true);
   r.onreadystatechange = function () {
     if (r.readyState != 4 || r.status != 200) return;
-    console.log(url + ": " + r.responseText);
+    console.log(dataURL + ": " + r.responseText);
   };
   // r.send("banana=yellow");
   r.send();
+}
+
+function addFrame(theGraph: mxGraph): void {
+  if (!theGraph || !theGraph.model || !theGraph.model.cells
+    || !theGraph.model.cells.UnaRadarFrame
+    || !theGraph.model.cells.UnaRadarFrame.geometry) return;
+
+  const view = theGraph.view;
+  const scale = view.scale;
+  const translateX = view.translate.x;
+  const translateY = view.translate.y;
+
+  const geometry = theGraph.model.cells.UnaRadarFrame.geometry;
+  const mxX = geometry.x;
+  const mxY = geometry.y;
+  const mxWidth = geometry.width;
+  const mxHeight = geometry.height;
+  const {htmlX, htmlY} = mxToHTML(mxX, mxY, translateX, translateY, scale);
+
+  let frame: HTMLIFrameElement = document.getElementById(frameID) as HTMLIFrameElement;
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.id = frameID;
+    frame.src = frameURL;
+    frame.style.left = htmlX + 'px';
+    frame.style.top = htmlY + 'px';
+    frame.style.width = (mxWidth * scale) + 'px';
+    frame.style.height = (mxHeight * scale) + 'px';
+    theGraph.container.appendChild(frame);
+  }
+  frame.style.left = htmlX + 'px';
+  frame.style.top = htmlY + 'px';
+  frame.style.width = (mxWidth * scale) + 'px';
+  frame.style.height = (mxHeight * scale) + 'px';
+}
+
+function htmlToMX(htmlX: number, htmlY: number, translateX: number,
+                  translateY: number, scale: number) {
+  const x = (htmlX / scale) - translateX;
+  const y = (htmlY / scale) - translateY;
+  return {x, y};
+}
+
+function mxToHTML(mxX: number, mxY: number, translateX: number,
+                  translateY: number, scale: number) {
+  const htmlX = (mxX + translateX) * scale;
+  const htmlY = (mxY + translateY) * scale;
+  return {htmlX, htmlY};
 }
 
 Draw.loadPlugin(function (ui: mxApp) {
@@ -47,6 +98,7 @@ Draw.loadPlugin(function (ui: mxApp) {
       // Do something useful with cell and consume the event
       // evt.consume();
     }
+    addFrame(ui.editor.graph);
   });
 
   /* Finding assigned keys:
@@ -93,8 +145,7 @@ Draw.loadPlugin(function (ui: mxApp) {
       const scale = theGraph.view.scale;
       const translateX = theGraph.view.translate.x;
       const translateY = theGraph.view.translate.y;
-      const x = (layerX / scale) - translateX;
-      const y = (layerY / scale) - translateY;
+      const {x, y} = htmlToMX(layerX, layerY, translateX, translateY, scale);
 
       console.log({
         x, y,
