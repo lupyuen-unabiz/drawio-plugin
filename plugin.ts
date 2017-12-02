@@ -4,7 +4,7 @@
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 
-import { mxEditor } from './mxgraph/editor/mxEditor';
+// import { mxEditor } from './mxgraph/editor/mxEditor';
 
 const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
 const frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';

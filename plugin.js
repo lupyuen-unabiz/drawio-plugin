@@ -1,10 +1,9 @@
-"use strict";
 /**
  * A draw.io plugin for inserting a custom text (or ellipse) element,
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+// import { mxEditor } from './mxgraph/editor/mxEditor';
 var dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
 var frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';
 var frameID = 'UnaRadarFrame';
