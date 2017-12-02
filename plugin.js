@@ -31,10 +31,12 @@ Draw.loadPlugin(function (ui) {
         var theGraph = ui.editor.graph;
         if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
             var pos = theGraph.getInsertPoint();
-            var newElement = new mxCell("", new mxGeometry(pos.x, pos.y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var lastMouseX = this.lastMouseX;
+            var lastMouseY = this.lastMouseY;
+            console.log({ pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
+            var newElement = new mxCell("", new mxGeometry(lastMouseX, lastMouseY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
-            console.log({ pos: pos, theGraph: theGraph, obj: this });
         }
     }, null, null, "Ctrl+ShiftR");
     ui.keyHandler.bindAction(81, !0, "myInsertEllipse", !0);
