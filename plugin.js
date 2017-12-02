@@ -33,7 +33,8 @@ Draw.loadPlugin(function (ui) {
             var pos = theGraph.getInsertPoint();
             var lastMouseX = theGraph.lastMouseX;
             var lastMouseY = theGraph.lastMouseY;
-            console.log({ pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
+            var getInsertPoint = theGraph.getInsertPoint();
+            console.log({ getInsertPoint: getInsertPoint, pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
             var newElement = new mxCell("", new mxGeometry(lastMouseX, lastMouseY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
