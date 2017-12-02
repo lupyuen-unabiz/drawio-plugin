@@ -14,6 +14,16 @@ Draw.loadPlugin(function (ui) {
     // Adds resources for actions
     mxResources.parse('myInsertText=Insert text element');
     mxResources.parse('myInsertEllipse=Insert ellipse');
+    // Adds popup menu : myInsertText, myInsertEllipse
+    var uiCreatePopupMenu = ui.menus.createPopupMenu;
+    ui.menus.createPopupMenu = function (menu, cell, evt) {
+        uiCreatePopupMenu.apply(this, arguments);
+        var graph = ui.editor.graph;
+        if (graph.model.isVertex(graph.getSelectionCell())) {
+            this.addMenuItems(menu, ['-', 'myInsertText'], null, evt);
+            this.addMenuItems(menu, ['-', 'myInsertEllipse'], null, evt);
+        }
+    };
     // Adds action : myInsertEllipse
     ui.actions.addAction('myInsertEllipse', function () {
         var theGraph = ui.editor.graph;
@@ -23,7 +33,7 @@ Draw.loadPlugin(function (ui) {
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
-    }, null, null, "Ctrl+Shift+Q");
+    }, null, null, "Ctrl+ShiftR");
     ui.keyHandler.bindAction(81, !0, "myInsertEllipse", !0);
     ui.actions.addAction('myInsertText', function () {
         var theGraph = ui.editor.graph;
