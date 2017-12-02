@@ -159,7 +159,6 @@ Draw.loadPlugin(function (ui) {
             var parent_1 = new mxCell(parentValue, parentGeometry, style);
             parent_1.vertex = !0;
             parent_1.setId(parentId);
-            graph.setSelectionCell(graph.addCell(parent_1));
             //  Create child.
             var childId = 'child' + Date.now();
             var childValue = 'BS 1234: -88 dBm';
@@ -167,6 +166,8 @@ Draw.loadPlugin(function (ui) {
             child.vertex = !0;
             child.setId(childId);
             parent_1.insert(child);
+            //  Add the parent.
+            graph.setSelectionCell(graph.addCell(parent_1));
             //  Get data from server.
             fetchData();
         }

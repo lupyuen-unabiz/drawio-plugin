@@ -179,7 +179,6 @@ Draw.loadPlugin(function (ui: mxApp) {
       const parent = new mxCell(parentValue, parentGeometry, style);
       parent.vertex = !0;
       parent.setId(parentId);
-      graph.setSelectionCell(graph.addCell(parent));
 
       //  Create child.
       const childId = 'child' + Date.now();
@@ -190,6 +189,9 @@ Draw.loadPlugin(function (ui: mxApp) {
       child.vertex = !0;
       child.setId(childId);
       parent.insert(child);
+
+      //  Add the parent.
+      graph.setSelectionCell(graph.addCell(parent));
 
       //  Get data from server.
       fetchData();
