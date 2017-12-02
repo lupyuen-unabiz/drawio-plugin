@@ -85,12 +85,34 @@ Draw.loadPlugin(function (ui: mxApp) {
   let layerX = 0;
   let layerY = 0;
 
-  // Adds resources for actions
+  //  Adds resources for actions
   mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
-  // mxResources.parse('myInsertText=Insert text element');
 
-  //  Add the UnaRadar frame.
-  //  window.setTimeout(() => addFrame(ui.editor.graph), 0);
+  //  Allow XML value for nodes.
+  /*
+  ui.editor.graph.convertValueToString = function(cell) {
+    if (mxUtils.isNode(cell.value)) {
+      return cell.getAttribute('label', '')
+    }
+  };
+
+  const cellLabelChanged = ui.editor.graph.cellLabelChanged;
+  ui.editor.graph.cellLabelChanged = function(cell, newValue, autoSize) {
+    if (mxUtils.isNode(cell.value)) {
+      // Clones the value for correct undo/redo
+      var elt = cell.value.cloneNode(true);
+      elt.setAttribute('label', newValue);
+      newValue = elt;
+    }
+    cellLabelChanged.apply(this, arguments);
+  };
+
+  var doc = mxUtils.createXmlDocument();
+  var node = doc.createElement('MyNode')
+  node.setAttribute('label', 'MyLabel');
+  node.setAttribute('attribute1', 'value1');
+  ui.editor.graph.insertVertex(ui.editor.graph.getDefaultParent(), null, node, 40, 40, 80, 30);
+  */
 
   ui.editor.graph.addListener(mxEvent.SIZE, function(sender, evt) {
     //  Update the UnaRadar frame upon resize.
@@ -127,9 +149,13 @@ Draw.loadPlugin(function (ui: mxApp) {
 
   // Adds action : recordRSSI
   ui.actions.addAction('recordRSSI', function () {
+    const startSize = 50;
+    const parentWidth = 200;
+    const parentHeight = 200;
+    const childHeight = 50;
     const style = [
       'swimlane;fontStyle=1;childLayout=stackLayout',
-      'horizontal=1;startSize=26;horizontalStack=0',
+      `horizontal=1;startSize=${startSize};horizontalStack=0`,
       'resizeParent=1;resizeLast=0;collapsible=1',
       'marginBottom=0;swimlaneFillColor=#ffffff;shadow=1',
       'gradientColor=none;html=1'
@@ -144,20 +170,25 @@ Draw.loadPlugin(function (ui: mxApp) {
       // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
 
       //  Create parent.
-      const parentName = 'rssi' + Date.now();
-      const parentGeometry = new mxGeometry(x, y, 80, 80);
-      const parent = new mxCell(parentName, parentGeometry, style);
+      const localtime = Date.now() + 8 * 60 * 60 * 1000;
+      const parentId = 'rssi' + Date.now();
+      const parentValue = 'RSSI @ ' +
+        new Date(localtime).toISOString().replace('T', ' ')
+          .substr(0, 16);
+      const parentGeometry = new mxGeometry(x, y, parentWidth, parentHeight);
+      const parent = new mxCell(parentValue, parentGeometry, style);
       parent.vertex = !0;
-      parent.setId(parentName);
+      parent.setId(parentId);
       graph.setSelectionCell(graph.addCell(parent));
 
       //  Create child.
-      const childName = 'child' + Date.now();
-      const child = new mxCell(childName,
-        new mxGeometry(0, 0, 80, 10),
+      const childId = 'child' + Date.now();
+      const childValue = 'BS 1234: -88 dBm';
+      const child = new mxCell(childValue,
+        new mxGeometry(0, startSize, parentWidth, childHeight),
         "text;html=1;strokeColor=none;fillColor=#204080;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
       child.vertex = !0;
-      child.setId(childName);
+      child.setId(childId);
       parent.insert(child);
 
       //  Get data from server.
