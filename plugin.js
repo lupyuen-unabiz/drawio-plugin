@@ -34,7 +34,7 @@ Draw.loadPlugin(function (ui) {
             var newElement = new mxCell("", new mxGeometry(pos.x, pos.y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
-            console.log({ pos: pos, lastTouchX: theGraph.lastTouchX, lastTouchY: theGraph.lastTouchY });
+            console.log({ pos: pos, theGraph: theGraph, obj: this });
         }
     }, null, null, "Ctrl+ShiftR");
     ui.keyHandler.bindAction(81, !0, "myInsertEllipse", !0);

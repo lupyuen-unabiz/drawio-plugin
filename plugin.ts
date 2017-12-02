@@ -38,8 +38,8 @@ Draw.loadPlugin(function(ui) {
                 new mxGeometry(pos.x, pos.y, 80, 80),
                 "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex=!0;
-            theGraph.setSelectionCell(theGraph.addCell(newElement))
-            console.log({ pos, lastTouchX: theGraph.lastTouchX, lastTouchY: theGraph.lastTouchY });
+            theGraph.setSelectionCell(theGraph.addCell(newElement));
+            console.log({ pos, theGraph, obj: this });
         }
     }, null, null, "Ctrl+ShiftR");
 
