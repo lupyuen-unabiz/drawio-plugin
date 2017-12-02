@@ -152,13 +152,13 @@ Draw.loadPlugin(function (ui: mxApp) {
     const startSize = 50;
     const parentWidth = 200;
     const parentHeight = 200;
-    const childHeight = 50;
-    const style = [
+    const childHeight = 30;
+    const parentStyle = [
       'swimlane;fontStyle=1;childLayout=stackLayout',
       `horizontal=1;startSize=${startSize};horizontalStack=0`,
       'resizeParent=1;resizeLast=0;collapsible=1',
       'marginBottom=0;swimlaneFillColor=#ffffff;shadow=1',
-      'gradientColor=none;html=1'
+      'gradientColor=none;html=1;opacity=50'
     ].join(';');
     // const style = "ellipse;whiteSpace=wrap;html=1;";
     const graph = ui.editor.graph;
@@ -176,16 +176,23 @@ Draw.loadPlugin(function (ui: mxApp) {
         new Date(localtime).toISOString().replace('T', ' ')
           .substr(0, 16);
       const parentGeometry = new mxGeometry(x, y, parentWidth, parentHeight);
-      const parent = new mxCell(parentValue, parentGeometry, style);
+      const parent = new mxCell(parentValue, parentGeometry, parentStyle);
       parent.vertex = !0;
       parent.setId(parentId);
 
       //  Create child.
+      const childY = startSize;
+      const bs = '1234';
+      const rssi = -88;
       const childId = 'child' + Date.now();
-      const childValue = 'BS 1234: -88 dBm';
-      const child = new mxCell(childValue,
-        new mxGeometry(0, startSize, parentWidth, childHeight),
-        "text;html=1;strokeColor=none;fillColor=#204080;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
+      const childValue = `  BS ${bs}: ${(rssi <= -100) ? rssi : (' ' + rssi)} dBm`;
+      const childGeometry = new mxGeometry(0, childY, parentWidth, childHeight);
+      const childStyle = [
+        'text;html=1;strokeColor=none',
+        'fillColor=#204080;opacity=50',
+        'shadow=1'
+      ].join(';');
+      const child = new mxCell(childValue, childGeometry, childStyle);
       child.vertex = !0;
       child.setId(childId);
       parent.insert(child);

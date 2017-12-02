@@ -133,13 +133,13 @@ Draw.loadPlugin(function (ui) {
         var startSize = 50;
         var parentWidth = 200;
         var parentHeight = 200;
-        var childHeight = 50;
-        var style = [
+        var childHeight = 30;
+        var parentStyle = [
             'swimlane;fontStyle=1;childLayout=stackLayout',
             "horizontal=1;startSize=" + startSize + ";horizontalStack=0",
             'resizeParent=1;resizeLast=0;collapsible=1',
             'marginBottom=0;swimlaneFillColor=#ffffff;shadow=1',
-            'gradientColor=none;html=1'
+            'gradientColor=none;html=1;opacity=50'
         ].join(';');
         // const style = "ellipse;whiteSpace=wrap;html=1;";
         var graph = ui.editor.graph;
@@ -156,13 +156,22 @@ Draw.loadPlugin(function (ui) {
                 new Date(localtime).toISOString().replace('T', ' ')
                     .substr(0, 16);
             var parentGeometry = new mxGeometry(x, y, parentWidth, parentHeight);
-            var parent_1 = new mxCell(parentValue, parentGeometry, style);
+            var parent_1 = new mxCell(parentValue, parentGeometry, parentStyle);
             parent_1.vertex = !0;
             parent_1.setId(parentId);
             //  Create child.
+            var childY = startSize;
+            var bs = '1234';
+            var rssi = -88;
             var childId = 'child' + Date.now();
-            var childValue = 'BS 1234: -88 dBm';
-            var child = new mxCell(childValue, new mxGeometry(0, startSize, parentWidth, childHeight), "text;html=1;strokeColor=none;fillColor=#204080;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
+            var childValue = "  BS " + bs + ": " + ((rssi <= -100) ? rssi : (' ' + rssi)) + " dBm";
+            var childGeometry = new mxGeometry(0, childY, parentWidth, childHeight);
+            var childStyle = [
+                'text;html=1;strokeColor=none',
+                'fillColor=#204080;opacity=50',
+                'shadow=1'
+            ].join(';');
+            var child = new mxCell(childValue, childGeometry, childStyle);
             child.vertex = !0;
             child.setId(childId);
             parent_1.insert(child);
