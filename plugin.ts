@@ -41,7 +41,7 @@ Draw.loadPlugin(function (ui) {
       const triggerY = theGraph.popupMenuHandler.triggerY;
       console.log({triggerX, triggerY, getInsertPoint, pos, theGraph, obj: this, lastMouseX, lastMouseY});
       var newElement = new mxCell("",
-        new mxGeometry(getInsertPoint.x, getInsertPoint.y, 80, 80),
+        new mxGeometry(triggerX, triggerY, 80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));
