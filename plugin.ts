@@ -192,7 +192,7 @@ Draw.loadPlugin(function (ui: mxApp) {
         `horizontal=1;startSize=${startSize};horizontalStack=0`,
         'resizeParent=1;resizeLast=0;collapsible=1',
         `marginBottom=0;swimlaneFillColor=${parentColor};shadow=1`,
-        'gradientColor=none;opacity=50;fontStyle=1;fontColor=#FFFFFF'
+        'gradientColor=none;opacity=50'
       ].join(';');
       const parentId = 'rssi' + Date.now();
       const parentRSSI = rssiData[0].rssi;
@@ -214,7 +214,8 @@ Draw.loadPlugin(function (ui: mxApp) {
           const childStyle = [
             'text;strokeColor=none',
             `fillColor=${rec.color};opacity=50`,
-            'shadow=1;align=center;verticalAlign=middle'
+            'shadow=1;align=center;verticalAlign=middle',
+            'fontStyle=1;fontColor=#FFFFFF'
           ].join(';');
           const child = new mxCell(childValue, childGeometry, childStyle);
           child.vertex = !0;
