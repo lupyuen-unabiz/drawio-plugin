@@ -12,7 +12,11 @@ const frameID = 'UnaRadarFrame';
 const frameHandleWidth = 20;
 
 class mxApp {
-  editor: mxEditor
+  editor: mxEditor,
+  menus: object,
+  menubar: object,
+  keyHandler: object,
+  actions: object
 }
 
 function fetchData() {
@@ -86,36 +90,18 @@ Draw.loadPlugin(function (ui: mxApp) {
     const cell = evt.getProperty('cell'); // cell may be null
     layerX = e.layerX;
     layerY = e.layerY;
-    console.log(
-      e.view.innerWidth,
-      e.layerX,
-      e.offsetX,
-      e.screenX,
-      e.x,
-      e,
-      cell
-    );
+    // console.log(e.view.innerWidth, e.layerX, e.offsetX, e.screenX, e.x, e, cell);
     // console.log({ layerX, layerY, e, cell });
-    if (cell)
-    {
+    if (cell) {
       // Do something useful with cell and consume the event
       // evt.consume();
     }
     addFrame(ui.editor.graph);
   });
 
-  /* Finding assigned keys:
-
-    * Open javascript console
-    * Draw.valueOf()
-    * Traverse to: Object > loadPlugin > <function scope>
-                  > ui > keyHandler > controlShiftKeys
-    * The number here is ASCII character code
-  */
-
   // Adds resources for actions
-  mxResources.parse('myInsertText=Insert text element');
   mxResources.parse('recordRSSI=Record Signal Strength (RSSI)');
+  // mxResources.parse('myInsertText=Insert text element');
 
   // Adds popup menu : myInsertText, recordRSSI
   var uiCreatePopupMenu = ui.menus.createPopupMenu;
@@ -124,7 +110,7 @@ Draw.loadPlugin(function (ui: mxApp) {
     var graph = ui.editor.graph;
     // if (graph.model.isVertex(graph.getSelectionCell()))
     {
-      this.addMenuItems(menu, ['-', 'myInsertText'], null, evt);
+      // this.addMenuItems(menu, ['-', 'myInsertText'], null, evt);
       this.addMenuItems(menu, ['-', 'recordRSSI'], null, evt);
     }
   };
@@ -133,30 +119,13 @@ Draw.loadPlugin(function (ui: mxApp) {
   ui.actions.addAction('recordRSSI', function () {
     const theGraph = ui.editor.graph;
     if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
-      const pos = theGraph.getInsertPoint();
-      const posx = pos.x;
-      const posy = pos.y;
-      const stx = theGraph.panningHandler.startX;
-      const sty = theGraph.panningHandler.startY;
-      // const x = stx + posx;
-      // const y = sty + posy;
-      const lastMouseX = theGraph.lastMouseX;
-      const lastMouseY = theGraph.lastMouseY;
-      const screenX = theGraph.popupMenuHandler.screenX;
-      const screenY = theGraph.popupMenuHandler.screenY;
-
+      const name = 'rssi' + Date.now();
       const scale = theGraph.view.scale;
       const translateX = theGraph.view.translate.x;
       const translateY = theGraph.view.translate.y;
       const {x, y} = htmlToMX(layerX, layerY, translateX, translateY, scale);
-
-      console.log({
-        x, y,
-        layerX, layerY,
-        scale, translateX, translateY,
-        theGraph,
-        obj: this});
-      const newElement = new mxCell("",
+      // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
+      const newElement = new mxCell(name,
         new mxGeometry(x, y, 80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
@@ -167,24 +136,10 @@ Draw.loadPlugin(function (ui: mxApp) {
 
   ui.keyHandler.bindAction(81, !0, "recordRSSI", !0);
 
-  ui.actions.addAction('myInsertText', function () {
-    var theGraph = ui.editor.graph;
-    if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
-      var pos = theGraph.getInsertPoint();
-      var newElement = new mxCell("",
-        new mxGeometry(pos.x, pos.y, 80, 80),
-        "text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
-      newElement.vertex = !0;
-      theGraph.setSelectionCell(theGraph.addCell(newElement))
-    }
-  }, null, null, "Ctrl+Shift+T");
-
-  ui.keyHandler.bindAction(84, !0, "myInsertText", !0);
-
   // Adds menu
   ui.menubar.addMenu('UnaRadar', function (menu, parent) {
-    ui.menus.addMenuItem(menu, 'myInsertText');
     ui.menus.addMenuItem(menu, 'recordRSSI');
+    // ui.menus.addMenuItem(menu, 'myInsertText');
   });
 
   // Reorders menubar
@@ -192,3 +147,23 @@ Draw.loadPlugin(function (ui: mxApp) {
     .insertBefore(ui.menubar.container.lastChild,
       ui.menubar.container.lastChild.previousSibling.previousSibling);
 });
+
+/* Finding assigned keys:
+  * Open javascript console
+  * Draw.valueOf()
+  * Traverse to: Object > loadPlugin > <function scope>
+                > ui > keyHandler > controlShiftKeys
+  * The number here is ASCII character code */
+
+/* ui.actions.addAction('myInsertText', function () {
+  var theGraph = ui.editor.graph;
+  if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
+    var pos = theGraph.getInsertPoint();
+    var newElement = new mxCell("",
+      new mxGeometry(pos.x, pos.y, 80, 80),
+      "text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
+    newElement.vertex = !0;
+    theGraph.setSelectionCell(theGraph.addCell(newElement))
+  }
+}, null, null, "Ctrl+Shift+T");
+ui.keyHandler.bindAction(84, !0, "myInsertText", !0); */
