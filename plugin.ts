@@ -135,18 +135,32 @@ Draw.loadPlugin(function (ui: mxApp) {
       'gradientColor=none;html=1'
     ].join(';');
     // const style = "ellipse;whiteSpace=wrap;html=1;";
-    const theGraph = ui.editor.graph;
-    if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
-      const name = 'rssi' + Date.now();
-      const scale = theGraph.view.scale;
-      const translateX = theGraph.view.translate.x;
-      const translateY = theGraph.view.translate.y;
+    const graph = ui.editor.graph;
+    if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
+      const scale = graph.view.scale;
+      const translateX = graph.view.translate.x;
+      const translateY = graph.view.translate.y;
       const {x, y} = htmlToMX(layerX, layerY, translateX, translateY, scale);
-      const geometry = new mxGeometry(x, y, 80, 80);
       // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
-      const newElement = new mxCell(name, geometry, style);
-      newElement.vertex = !0;
-      theGraph.setSelectionCell(theGraph.addCell(newElement));
+
+      //  Create parent.
+      const parentName = 'rssi' + Date.now();
+      const parentGeometry = new mxGeometry(x, y, 80, 80);
+      const parent = new mxCell(parentName, parentGeometry, style);
+      parent.vertex = !0;
+      parent.setId(parentName);
+      graph.setSelectionCell(graph.addCell(parent));
+
+      //  Create child.
+      const childName = 'child' + Date.now();
+      const child = new mxCell(childName,
+        new mxGeometry(0, 0, 80, 10),
+        "text;html=1;strokeColor=none;fillColor=#204080;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
+      child.vertex = !0;
+      child.setId(childName);
+      parent.insert(child);
+
+      //  Get data from server.
       fetchData();
     }
   }, null, null, "Ctrl+ShiftR");

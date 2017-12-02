@@ -116,18 +116,27 @@ Draw.loadPlugin(function (ui) {
             'gradientColor=none;html=1'
         ].join(';');
         // const style = "ellipse;whiteSpace=wrap;html=1;";
-        var theGraph = ui.editor.graph;
-        if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
-            var name_1 = 'rssi' + Date.now();
-            var scale = theGraph.view.scale;
-            var translateX = theGraph.view.translate.x;
-            var translateY = theGraph.view.translate.y;
+        var graph = ui.editor.graph;
+        if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
+            var scale = graph.view.scale;
+            var translateX = graph.view.translate.x;
+            var translateY = graph.view.translate.y;
             var _a = htmlToMX(layerX, layerY, translateX, translateY, scale), x = _a.x, y = _a.y;
-            var geometry = new mxGeometry(x, y, 80, 80);
             // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
-            var newElement = new mxCell(name_1, geometry, style);
-            newElement.vertex = !0;
-            theGraph.setSelectionCell(theGraph.addCell(newElement));
+            //  Create parent.
+            var parentName = 'rssi' + Date.now();
+            var parentGeometry = new mxGeometry(x, y, 80, 80);
+            var parent_1 = new mxCell(parentName, parentGeometry, style);
+            parent_1.vertex = !0;
+            parent_1.setId(parentName);
+            graph.setSelectionCell(graph.addCell(parent_1));
+            //  Create child.
+            var childName = 'child' + Date.now();
+            var child = new mxCell(childName, new mxGeometry(0, 0, 80, 10), "text;html=1;strokeColor=none;fillColor=#204080;align=left;verticalAlign=top;whiteSpace=wrap;overflow=auto");
+            child.vertex = !0;
+            child.setId(childName);
+            parent_1.insert(child);
+            //  Get data from server.
             fetchData();
         }
     }, null, null, "Ctrl+ShiftR");
