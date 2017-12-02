@@ -73,6 +73,10 @@ Draw.loadPlugin(function (ui) {
     var layerY = 0;
     //  Add the UnaRadar frame.
     window.setTimeout(function () { return addFrame(ui.editor.graph); }, 10 * 1000);
+    ui.editor.graph.addListener(mxEvent.SIZE, function (sender, evt) {
+        //  Update the UnaRadar frame.
+        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 1000);
+    });
     //  Add the click listener to get click position.
     ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
         var e = evt.getProperty('event'); // mouse event
