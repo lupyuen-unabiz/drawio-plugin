@@ -146,6 +146,12 @@ Draw.loadPlugin(function (ui) {
         if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
             //  Get data from server.
             fetchData();
+            var rssiData = [
+                { bs: '1234', rssi: -88 },
+                { bs: '123A', rssi: -98 },
+                { bs: '123C', rssi: -108 },
+                { bs: '12EF', rssi: -118 },
+            ];
             //  Get the graph view parameters.
             var scale = graph.view.scale;
             var translateX = graph.view.translate.x;
