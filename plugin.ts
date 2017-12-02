@@ -9,6 +9,7 @@
 const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
 const frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';
 const frameID = 'UnaRadarFrame';
+const frameHandleWidth = 20;
 
 class mxApp {
   editor: mxEditor
@@ -36,9 +37,9 @@ function addFrame(theGraph: mxGraph): void {
   const translateY = view.translate.y;
 
   const geometry = theGraph.model.cells.UnaRadarFrame.geometry;
-  const mxX = geometry.x;
+  const mxX = geometry.x + frameHandleWidth;
   const mxY = geometry.y;
-  const mxWidth = geometry.width;
+  const mxWidth = geometry.width - (frameHandleWidth * 2);
   const mxHeight = geometry.height;
   const {htmlX, htmlY} = mxToHTML(mxX, mxY, translateX, translateY, scale);
 
@@ -47,6 +48,8 @@ function addFrame(theGraph: mxGraph): void {
     frame = document.createElement('iframe');
     frame.id = frameID;
     frame.src = frameURL;
+    frame.scrolling = 'no';
+    frame.style.position = 'absolute';
     frame.style.left = htmlX + 'px';
     frame.style.top = htmlY + 'px';
     frame.style.width = (mxWidth * scale) + 'px';
