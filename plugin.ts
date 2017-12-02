@@ -34,26 +34,22 @@ Draw.loadPlugin(function (ui) {
     const theGraph = ui.editor.graph;
     if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
       const pos = theGraph.getInsertPoint();
+      const posx = pos.x;
+      const posy = pos.y;
+      const stx = theGraph.panningHandler.startX;
+      const sty = theGraph.panningHandler.startY;
+      const x = stx + posx;
+      const y = sty + posy;
       const lastMouseX = theGraph.lastMouseX;
       const lastMouseY = theGraph.lastMouseY;
-      const getInsertPoint = theGraph.getInsertPoint();
       const screenX = theGraph.popupMenuHandler.screenX;
       const screenY = theGraph.popupMenuHandler.screenY;
       console.log({
-        stx: theGraph.panningHandler.startX,
-        sty: theGraph.panningHandler.startY,
-        ix: getInsertPoint.x, iy: getInsertPoint.y,
-        // dx: theGraph.panningHandler.dx,
-        // lx: lastMouseX, ly: lastMouseY,
-        sx: screenX, // sy: screenY,
-        px: pos.x, py: pos.y,
+        x, y, stx, sty, posx, posy,
         theGraph,
         obj: this});
       const newElement = new mxCell("",
-        new mxGeometry(
-          getInsertPoint.x + theGraph.panningHandler.startX,
-          getInsertPoint.y + theGraph.panningHandler.startY,
-          80, 80),
+        new mxGeometry(x, y, 80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));

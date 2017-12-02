@@ -31,23 +31,22 @@ Draw.loadPlugin(function (ui) {
         var theGraph = ui.editor.graph;
         if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
             var pos = theGraph.getInsertPoint();
+            var posx = pos.x;
+            var posy = pos.y;
+            var stx = theGraph.panningHandler.startX;
+            var sty = theGraph.panningHandler.startY;
+            var x = stx + posx;
+            var y = sty + posy;
             var lastMouseX = theGraph.lastMouseX;
             var lastMouseY = theGraph.lastMouseY;
-            var getInsertPoint = theGraph.getInsertPoint();
             var screenX_1 = theGraph.popupMenuHandler.screenX;
             var screenY_1 = theGraph.popupMenuHandler.screenY;
             console.log({
-                stx: theGraph.panningHandler.startX,
-                sty: theGraph.panningHandler.startY,
-                ix: getInsertPoint.x, iy: getInsertPoint.y,
-                // dx: theGraph.panningHandler.dx,
-                // lx: lastMouseX, ly: lastMouseY,
-                sx: screenX_1,
-                px: pos.x, py: pos.y,
+                x: x, y: y, stx: stx, sty: sty, posx: posx, posy: posy,
                 theGraph: theGraph,
                 obj: this
             });
-            var newElement = new mxCell("", new mxGeometry(getInsertPoint.x + theGraph.panningHandler.startX, getInsertPoint.y + theGraph.panningHandler.startY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var newElement = new mxCell("", new mxGeometry(x, y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
