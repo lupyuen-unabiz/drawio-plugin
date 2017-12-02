@@ -4,7 +4,7 @@
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 
-// import * as mxEditor from './mxgraph/editor/mxEditor';
+import { mxEditor } from './mxgraph/editor/mxEditor';
 
 const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
 const frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';
@@ -12,11 +12,17 @@ const frameID = 'UnaRadarFrame';
 const frameHandleWidth = 20;
 
 class mxApp {
-  editor: mxEditor,
-  menus: object,
-  menubar: object,
-  keyHandler: object,
-  actions: object
+  editor: mxEditor;
+  menus: object;
+  menubar: object;
+  keyHandler: object;
+  actions: object;
+}
+
+class rssiRecord {
+  bs: string;
+  rssi: number;
+  color: string;
 }
 
 function fetchData() {
@@ -150,26 +156,24 @@ Draw.loadPlugin(function (ui: mxApp) {
   // Adds action : recordRSSI
   ui.actions.addAction('recordRSSI', function () {
     const startSize = 50;
-    const parentWidth = 200;
+    const parentWidth = 154;
     const parentHeight = 200;
     const childHeight = 30;
-    const parentStyle = [
-      'swimlane;fontStyle=1;childLayout=stackLayout',
-      `horizontal=1;startSize=${startSize};horizontalStack=0`,
-      'resizeParent=1;resizeLast=0;collapsible=1',
-      'marginBottom=0;swimlaneFillColor=#ffffff;shadow=1',
-      'gradientColor=none;html=1;opacity=50'
-    ].join(';');
     // const style = "ellipse;whiteSpace=wrap;html=1;";
     const graph = ui.editor.graph;
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
+      const localtime = Date.now() + 8 * 60 * 60 * 1000;
+      const localtimestr = new Date(localtime).toISOString().replace('T', ' ')
+        .substr(0, 16);
+
       //  Get data from server.
       fetchData();
-      const rssiData = [
-        { bs: '1234', rssi: -88 },
-        { bs: '123A', rssi: -98 },
-        { bs: '123C', rssi: -108 },
-        { bs: '12EF', rssi: -118 },
+      const rssiData: rssiRecord[] = [
+        { bs: 'overall', rssi: -88, color: '#204080' },
+        { bs: '1234', rssi: -88, color: '#204080' },
+        { bs: '123A', rssi: -98, color: '#404080' },
+        { bs: '123C', rssi: -108, color: '#604080' },
+        { bs: '12EF', rssi: -118, color: '#a04080' },
       ];
 
       //  Get the graph view parameters.
@@ -180,32 +184,42 @@ Draw.loadPlugin(function (ui: mxApp) {
       // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
 
       //  Create parent.
-      const localtime = Date.now() + 8 * 60 * 60 * 1000;
+      const parentColor = rssiData[0].color;
+      const parentStyle = [
+        'swimlane;fontStyle=1;childLayout=stackLayout',
+        `horizontal=1;startSize=${startSize};horizontalStack=0`,
+        'resizeParent=1;resizeLast=0;collapsible=1',
+        `marginBottom=0;swimlaneFillColor=${parentColor};shadow=1`,
+        'gradientColor=none;opacity=50'
+      ].join(';');
       const parentId = 'rssi' + Date.now();
-      const parentValue = 'RSSI @ ' +
-        new Date(localtime).toISOString().replace('T', ' ')
-          .substr(0, 16);
+      const parentRSSI = rssiData[0].rssi;
+      const parentValue = `RSSI ${parentRSSI} dBm\n${localtimestr}`;
       const parentGeometry = new mxGeometry(x, y, parentWidth, parentHeight);
       const parent = new mxCell(parentValue, parentGeometry, parentStyle);
       parent.vertex = !0;
       parent.setId(parentId);
+      let childY = startSize;
 
-      //  Create child.
-      const childY = startSize;
-      const bs = '1234';
-      const rssi = -88;
-      const childId = 'child' + Date.now();
-      const childValue = `  BS ${bs}: ${(rssi <= -100) ? rssi : (' ' + rssi)} dBm`;
-      const childGeometry = new mxGeometry(0, childY, parentWidth, childHeight);
-      const childStyle = [
-        'text;html=1;strokeColor=none',
-        'fillColor=#204080;opacity=50',
-        'shadow=1'
-      ].join(';');
-      const child = new mxCell(childValue, childGeometry, childStyle);
-      child.vertex = !0;
-      child.setId(childId);
-      parent.insert(child);
+      //  Create child for each record.
+      rssiData.filter(rec => (rec.bs !== 'overall'))
+        .forEach(rec => {
+          //  bs = '1234', rssi = -88, color = '#203040';
+          const childId = `child_${rec.bs}_${Date.now()}`;
+          const childValue = `BS ${rec.bs}: ${
+            (rec.rssi <= -100) ? rec.rssi : (' ' + rec.rssi)} dBm`;
+          const childGeometry = new mxGeometry(0, childY, parentWidth, childHeight);
+          const childStyle = [
+            'text;strokeColor=none',
+            `fillColor=${rec.color};opacity=50`,
+            'shadow=1;align=center;verticalAlign=middle'
+          ].join(';');
+          const child = new mxCell(childValue, childGeometry, childStyle);
+          child.vertex = !0;
+          child.setId(childId);
+          parent.insert(child);
+          childY += childHeight;
+      });
 
       //  Add the parent.
       graph.setSelectionCell(graph.addCell(parent));
