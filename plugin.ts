@@ -127,6 +127,14 @@ Draw.loadPlugin(function (ui: mxApp) {
 
   // Adds action : recordRSSI
   ui.actions.addAction('recordRSSI', function () {
+    const style = [
+      'swimlane;fontStyle=1;childLayout=stackLayout',
+      'horizontal=1;startSize=26;horizontalStack=0',
+      'resizeParent=1;resizeLast=0;collapsible=1',
+      'marginBottom=0;swimlaneFillColor=#ffffff;shadow=1',
+      'gradientColor=none'
+    ].join(';');
+    // const style = "ellipse;whiteSpace=wrap;html=1;";
     const theGraph = ui.editor.graph;
     if (theGraph.isEnabled() && !theGraph.isCellLocked(theGraph.getDefaultParent())) {
       const name = 'rssi' + Date.now();
@@ -134,10 +142,9 @@ Draw.loadPlugin(function (ui: mxApp) {
       const translateX = theGraph.view.translate.x;
       const translateY = theGraph.view.translate.y;
       const {x, y} = htmlToMX(layerX, layerY, translateX, translateY, scale);
+      const geometry = new mxGeometry(x, y, 80, 80);
       // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
-      const newElement = new mxCell(name,
-        new mxGeometry(x, y, 80, 80),
-        "ellipse;whiteSpace=wrap;html=1;");
+      const newElement = new mxCell(name, geometry, style);
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));
       fetchData();
