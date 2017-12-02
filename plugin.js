@@ -1,6 +1,7 @@
 /**
  * A draw.io plugin for inserting a custom text (or ellipse) element,
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
+https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 Draw.loadPlugin(function (ui) {
     /* Finding assigned keys:
@@ -19,7 +20,8 @@ Draw.loadPlugin(function (ui) {
     ui.menus.createPopupMenu = function (menu, cell, evt) {
         uiCreatePopupMenu.apply(this, arguments);
         var graph = ui.editor.graph;
-        if (graph.model.isVertex(graph.getSelectionCell())) {
+        // if (graph.model.isVertex(graph.getSelectionCell()))
+        {
             this.addMenuItems(menu, ['-', 'myInsertText'], null, evt);
             this.addMenuItems(menu, ['-', 'myInsertEllipse'], null, evt);
         }
