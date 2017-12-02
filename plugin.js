@@ -37,7 +37,10 @@ Draw.loadPlugin(function (ui) {
             var screenX_1 = theGraph.popupMenuHandler.screenX;
             var screenY_1 = theGraph.popupMenuHandler.screenY;
             console.log({ screenX: screenX_1, screenY: screenY_1, getInsertPoint: getInsertPoint, pos: pos, theGraph: theGraph, obj: this, lastMouseX: lastMouseX, lastMouseY: lastMouseY });
-            var newElement = new mxCell("", new mxGeometry(screenX_1, screenY_1, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            /* var newElement = new mxCell("",
+              new mxGeometry(screenX, screenY, 80, 80),
+              "ellipse;whiteSpace=wrap;html=1;"); */
+            var newElement = new mxCell("", null, "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }
