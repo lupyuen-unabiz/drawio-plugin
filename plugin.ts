@@ -18,10 +18,10 @@ Draw.loadPlugin(function (ui: mxApp) {
   {
     const e = evt.getProperty('event'); // mouse event
     const cell = evt.getProperty('cell'); // cell may be null
-    layerX = e.layerX;
-    layerY = e.layerY;
+    layerX = e.layerX - e.view.innerWidth;
+    layerY = e.layerY - e.view.innerHeight;
     console.log(
-      e.clientX,
+      e.view.innerWidth,
       e.layerX,
       e.offsetX,
       e.screenX,

@@ -15,9 +15,9 @@ Draw.loadPlugin(function (ui) {
     ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
         var e = evt.getProperty('event'); // mouse event
         var cell = evt.getProperty('cell'); // cell may be null
-        layerX = e.layerX;
-        layerY = e.layerY;
-        console.log(e.clientX, e.layerX, e.offsetX, e.screenX, e.x);
+        layerX = e.layerX - e.view.innerWidth;
+        layerY = e.layerY - e.view.innerHeight;
+        console.log(e.view.innerWidth, e.layerX, e.offsetX, e.screenX, e.x);
         // console.log({ layerX, layerY, e, cell });
         if (cell) {
             // Do something useful with cell and consume the event
