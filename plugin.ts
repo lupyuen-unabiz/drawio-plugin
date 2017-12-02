@@ -85,6 +85,10 @@ Draw.loadPlugin(function (ui: mxApp) {
   let layerX = 0;
   let layerY = 0;
 
+  //  Add the UnaRadar frame.
+  window.setTimeout(() => addFrame(ui.editor.graph), 5000);
+
+  //  Add the click listener to get click position.
   ui.editor.graph.addListener(mxEvent.CLICK, function(sender, evt)
   {
     const e = evt.getProperty('event'); // mouse event
