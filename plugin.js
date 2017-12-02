@@ -4,8 +4,9 @@
  https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 // import { mxEditor } from './mxgraph/editor/mxEditor';
+var deviceID = '2C30EB';
 var dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
-var frameURL = 'https://unabelldemo.au.meteorapp.com/done/2C30EB';
+var frameURL = "https://unabelldemo.au.meteorapp.com/done/" + deviceID;
 var frameID = 'UnaRadarFrame';
 var frameHandleWidth = 20;
 var mxApp = (function () {
@@ -144,11 +145,11 @@ Draw.loadPlugin(function (ui) {
             //  Get data from server.
             fetchData();
             var rssiData = [
-                { bs: 'overall', rssi: -88, color: '#204080' },
-                { bs: '1234', rssi: -88, color: '#204080' },
-                { bs: '123A', rssi: -98, color: '#404080' },
-                { bs: '123C', rssi: -108, color: '#604080' },
-                { bs: '12EF', rssi: -118, color: '#a04080' },
+                { bs: 'overall', rssi: -88, color: '#204080', localdatetime: '2017-12-03 04:15' },
+                { bs: '1234', rssi: -88, color: '#204080', localdatetime: '2017-12-03 04:15' },
+                { bs: '123A', rssi: -98, color: '#404080', localdatetime: '2017-12-03 04:15' },
+                { bs: '123C', rssi: -108, color: '#604080', localdatetime: '2017-12-03 04:15' },
+                { bs: '12EF', rssi: -118, color: '#a04080', localdatetime: '2017-12-03 04:15' },
             ];
             //  Compute dimensions of parent.
             var startSize = 50;
@@ -162,6 +163,9 @@ Draw.loadPlugin(function (ui) {
             var _a = htmlToMX(layerX, layerY, translateX, translateY, scale), x = _a.x, y = _a.y;
             // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
             //  Create parent.
+            var parentGeometry = new mxGeometry(x, y, parentWidth_1, parentHeight);
+            //  Set the collapsed parent dimensions.
+            parentGeometry.alternateBounds = { x: x, y: y, width: parentWidth_1, height: startSize };
             var parentColor = rssiData[0].color;
             var parentStyle = [
                 'swimlane;fontStyle=1;childLayout=stackLayout',
@@ -171,11 +175,10 @@ Draw.loadPlugin(function (ui) {
                 'gradientColor=none;opacity=50'
             ].join(';');
             var parentId = 'rssi' + Date.now();
-            var parentRSSI = rssiData[0].rssi;
-            var parentValue = "RSSI " + parentRSSI + " dBm\n" + localtimestr;
-            var parentGeometry = new mxGeometry(x, y, parentWidth_1, parentHeight);
-            //  Set the collapsed parent dimensions.
-            parentGeometry.alternateBounds = { x: x, y: y, width: parentWidth_1, height: startSize };
+            var parentRec = rssiData.filter(function (rec) { return (rec.bs === 'overall'); })[0];
+            var parentRSSI = parentRec.rssi;
+            var datetime = parentRec.localdatetime;
+            var parentValue = "RSSI " + parentRSSI + " dBm\n" + datetime;
             var parent_1 = new mxCell(parentValue, parentGeometry, parentStyle);
             parent_1.vertex = !0;
             parent_1.setId(parentId);
