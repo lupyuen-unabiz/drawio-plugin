@@ -64,8 +64,8 @@ Draw.loadPlugin(function (ui) {
             var scale = theGraph.view.scale;
             var translateX = theGraph.view.translate.x;
             var translateY = theGraph.view.translate.y;
-            var x = (layerX - translateX) / scale;
-            var y = (layerY - translateY) / scale;
+            var x = (layerX / scale) - translateX;
+            var y = (layerY / scale) - translateY;
             console.log({
                 x: x, y: y,
                 layerX: layerX, layerY: layerY,

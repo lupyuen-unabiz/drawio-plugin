@@ -81,8 +81,8 @@ Draw.loadPlugin(function (ui: mxApp) {
       const scale = theGraph.view.scale;
       const translateX = theGraph.view.translate.x;
       const translateY = theGraph.view.translate.y;
-      const x = (layerX - translateX) / scale;
-      const y = (layerY - translateY) / scale;
+      const x = (layerX / scale) - translateX;
+      const y = (layerY / scale) - translateY;
 
       console.log({
         x, y,
