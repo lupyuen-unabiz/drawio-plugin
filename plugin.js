@@ -135,10 +135,6 @@ Draw.loadPlugin(function (ui) {
     };
     // Adds action : recordRSSI
     ui.actions.addAction('recordRSSI', function () {
-        var startSize = 50;
-        var parentWidth = 154;
-        var parentHeight = 200;
-        var childHeight = 30;
         // const style = "ellipse;whiteSpace=wrap;html=1;";
         var graph = ui.editor.graph;
         if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
@@ -154,6 +150,11 @@ Draw.loadPlugin(function (ui) {
                 { bs: '123C', rssi: -108, color: '#604080' },
                 { bs: '12EF', rssi: -118, color: '#a04080' },
             ];
+            //  Compute dimensions of parent.
+            var startSize = 50;
+            var childHeight_1 = 30;
+            var parentWidth_1 = 154;
+            var parentHeight = startSize + childHeight_1 * (rssiData.length - 1);
             //  Get the graph view parameters.
             var scale = graph.view.scale;
             var translateX = graph.view.translate.x;
@@ -167,12 +168,12 @@ Draw.loadPlugin(function (ui) {
                 "horizontal=1;startSize=" + startSize + ";horizontalStack=0",
                 'resizeParent=1;resizeLast=0;collapsible=1',
                 "marginBottom=0;swimlaneFillColor=" + parentColor + ";shadow=1",
-                'gradientColor=none;opacity=50'
+                'gradientColor=none;opacity=50;fontStyle=1;fontColor=#FFFFFF'
             ].join(';');
             var parentId = 'rssi' + Date.now();
             var parentRSSI = rssiData[0].rssi;
             var parentValue = "RSSI " + parentRSSI + " dBm\n" + localtimestr;
-            var parentGeometry = new mxGeometry(x, y, parentWidth, parentHeight);
+            var parentGeometry = new mxGeometry(x, y, parentWidth_1, parentHeight);
             var parent_1 = new mxCell(parentValue, parentGeometry, parentStyle);
             parent_1.vertex = !0;
             parent_1.setId(parentId);
@@ -183,7 +184,7 @@ Draw.loadPlugin(function (ui) {
                 //  bs = '1234', rssi = -88, color = '#203040';
                 var childId = "child_" + rec.bs + "_" + Date.now();
                 var childValue = "BS " + rec.bs + ": " + ((rec.rssi <= -100) ? rec.rssi : (' ' + rec.rssi)) + " dBm";
-                var childGeometry = new mxGeometry(0, childY_1, parentWidth, childHeight);
+                var childGeometry = new mxGeometry(0, childY_1, parentWidth_1, childHeight_1);
                 var childStyle = [
                     'text;strokeColor=none',
                     "fillColor=" + rec.color + ";opacity=50",
@@ -193,7 +194,7 @@ Draw.loadPlugin(function (ui) {
                 child.vertex = !0;
                 child.setId(childId);
                 parent_1.insert(child);
-                childY_1 += childHeight;
+                childY_1 += childHeight_1;
             });
             //  Add the parent.
             graph.setSelectionCell(graph.addCell(parent_1));

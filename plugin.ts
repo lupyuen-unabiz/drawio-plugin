@@ -155,10 +155,6 @@ Draw.loadPlugin(function (ui: mxApp) {
 
   // Adds action : recordRSSI
   ui.actions.addAction('recordRSSI', function () {
-    const startSize = 50;
-    const parentWidth = 154;
-    const parentHeight = 200;
-    const childHeight = 30;
     // const style = "ellipse;whiteSpace=wrap;html=1;";
     const graph = ui.editor.graph;
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
@@ -176,6 +172,12 @@ Draw.loadPlugin(function (ui: mxApp) {
         { bs: '12EF', rssi: -118, color: '#a04080' },
       ];
 
+      //  Compute dimensions of parent.
+      const startSize = 50;
+      const childHeight = 30;
+      const parentWidth = 154;
+      const parentHeight = startSize + childHeight * (rssiData.length - 1);
+
       //  Get the graph view parameters.
       const scale = graph.view.scale;
       const translateX = graph.view.translate.x;
@@ -190,7 +192,7 @@ Draw.loadPlugin(function (ui: mxApp) {
         `horizontal=1;startSize=${startSize};horizontalStack=0`,
         'resizeParent=1;resizeLast=0;collapsible=1',
         `marginBottom=0;swimlaneFillColor=${parentColor};shadow=1`,
-        'gradientColor=none;opacity=50'
+        'gradientColor=none;opacity=50;fontStyle=1;fontColor=#FFFFFF'
       ].join(';');
       const parentId = 'rssi' + Date.now();
       const parentRSSI = rssiData[0].rssi;
