@@ -15,9 +15,9 @@ Draw.loadPlugin(function (ui) {
     ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
         var e = evt.getProperty('event'); // mouse event
         var cell = evt.getProperty('cell'); // cell may be null
-        layerX = e.layerX - e.view.innerWidth;
-        layerY = e.layerY - e.view.innerHeight;
-        console.log(e.view.innerWidth, e.layerX, e.offsetX, e.screenX, e.x);
+        layerX = e.layerX;
+        layerY = e.layerY;
+        console.log(e.view.innerWidth, e.layerX, e.offsetX, e.screenX, e.x, e, cell);
         // console.log({ layerX, layerY, e, cell });
         if (cell) {
             // Do something useful with cell and consume the event
@@ -55,19 +55,25 @@ Draw.loadPlugin(function (ui) {
             var posy = pos.y;
             var stx = theGraph.panningHandler.startX;
             var sty = theGraph.panningHandler.startY;
-            var x = stx + posx;
-            var y = sty + posy;
+            // const x = stx + posx;
+            // const y = sty + posy;
             var lastMouseX = theGraph.lastMouseX;
             var lastMouseY = theGraph.lastMouseY;
             var screenX_1 = theGraph.popupMenuHandler.screenX;
             var screenY_1 = theGraph.popupMenuHandler.screenY;
+            var scale = theGraph.view.scale;
+            var translateX = theGraph.view.translate.x;
+            var translateY = theGraph.view.translate.y;
+            var x = (layerX / scale); // - translateX;
+            var y = (layerY / scale); // - translateY;
             console.log({
+                x: x, y: y,
                 layerX: layerX, layerY: layerY,
-                x: x, y: y, stx: stx, sty: sty, posx: posx, posy: posy,
+                scale: scale, translateX: translateX, translateY: translateY,
                 theGraph: theGraph,
                 obj: this
             });
-            var newElement = new mxCell("", new mxGeometry(layerX, layerY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var newElement = new mxCell("", new mxGeometry(x, y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }

@@ -18,14 +18,16 @@ Draw.loadPlugin(function (ui: mxApp) {
   {
     const e = evt.getProperty('event'); // mouse event
     const cell = evt.getProperty('cell'); // cell may be null
-    layerX = e.layerX - e.view.innerWidth;
-    layerY = e.layerY - e.view.innerHeight;
+    layerX = e.layerX;
+    layerY = e.layerY;
     console.log(
       e.view.innerWidth,
       e.layerX,
       e.offsetX,
       e.screenX,
-      e.x
+      e.x,
+      e,
+      cell
     );
     // console.log({ layerX, layerY, e, cell });
     if (cell)
@@ -69,19 +71,27 @@ Draw.loadPlugin(function (ui: mxApp) {
       const posy = pos.y;
       const stx = theGraph.panningHandler.startX;
       const sty = theGraph.panningHandler.startY;
-      const x = stx + posx;
-      const y = sty + posy;
+      // const x = stx + posx;
+      // const y = sty + posy;
       const lastMouseX = theGraph.lastMouseX;
       const lastMouseY = theGraph.lastMouseY;
       const screenX = theGraph.popupMenuHandler.screenX;
       const screenY = theGraph.popupMenuHandler.screenY;
+
+      const scale = theGraph.view.scale;
+      const translateX = theGraph.view.translate.x;
+      const translateY = theGraph.view.translate.y;
+      const x = (layerX / scale); // - translateX;
+      const y = (layerY / scale); // - translateY;
+
       console.log({
+        x, y,
         layerX, layerY,
-        x, y, stx, sty, posx, posy,
+        scale, translateX, translateY,
         theGraph,
         obj: this});
       const newElement = new mxCell("",
-        new mxGeometry(layerX, layerY, 80, 80),
+        new mxGeometry(x, y, 80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));
