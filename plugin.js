@@ -47,7 +47,7 @@ Draw.loadPlugin(function (ui) {
                 theGraph: theGraph,
                 obj: this
             });
-            var newElement = new mxCell("", new mxGeometry(theGraph.panningHandler.startX, theGraph.panningHandler.startY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
+            var newElement = new mxCell("", new mxGeometry(getInsertPoint.x + theGraph.panningHandler.startX, getInsertPoint.y + theGraph.panningHandler.startY, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
         }

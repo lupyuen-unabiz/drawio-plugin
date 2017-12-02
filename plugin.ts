@@ -51,8 +51,8 @@ Draw.loadPlugin(function (ui) {
         obj: this});
       const newElement = new mxCell("",
         new mxGeometry(
-          theGraph.panningHandler.startX,
-          theGraph.panningHandler.startY,
+          getInsertPoint.x + theGraph.panningHandler.startX,
+          getInsertPoint.y + theGraph.panningHandler.startY,
           80, 80),
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
