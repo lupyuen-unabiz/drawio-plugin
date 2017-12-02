@@ -12,13 +12,14 @@ var mxApp = (function () {
 function fetchData() {
     var url = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
     var r = new XMLHttpRequest();
-    r.open("POST", "path/to/api", true);
+    r.open("GET", url, true);
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200)
             return;
         alert("Success: " + r.responseText);
     };
-    r.send("banana=yellow");
+    // r.send("banana=yellow");
+    r.send();
 }
 Draw.loadPlugin(function (ui) {
     var layerX = 0;
@@ -87,6 +88,7 @@ Draw.loadPlugin(function (ui) {
             var newElement = new mxCell("", new mxGeometry(x, y, 80, 80), "ellipse;whiteSpace=wrap;html=1;");
             newElement.vertex = !0;
             theGraph.setSelectionCell(theGraph.addCell(newElement));
+            fetchData();
         }
     }, null, null, "Ctrl+ShiftR");
     ui.keyHandler.bindAction(81, !0, "recordRSSI", !0);

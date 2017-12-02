@@ -13,12 +13,13 @@ class mxApp {
 function fetchData() {
   const url = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
   var r = new XMLHttpRequest();
-  r.open("POST", "path/to/api", true);
+  r.open("GET", url, true);
   r.onreadystatechange = function () {
     if (r.readyState != 4 || r.status != 200) return;
     alert("Success: " + r.responseText);
   };
-  r.send("banana=yellow");
+  // r.send("banana=yellow");
+  r.send();
 }
 
 Draw.loadPlugin(function (ui: mxApp) {
@@ -106,6 +107,7 @@ Draw.loadPlugin(function (ui: mxApp) {
         "ellipse;whiteSpace=wrap;html=1;");
       newElement.vertex = !0;
       theGraph.setSelectionCell(theGraph.addCell(newElement));
+      fetchData();
     }
   }, null, null, "Ctrl+ShiftR");
 
