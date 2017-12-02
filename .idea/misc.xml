@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="IdProvider" IDEtalkID="847558491BD26D4611104C051207A9E7" />
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="UnicodeBrowser">
+    <option name="fontName" value="Hasklig" />
   </component>
   <component name="VagrantProjectSettings">
     <option name="instanceFolder" value="" />

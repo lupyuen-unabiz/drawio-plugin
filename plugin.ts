@@ -36,7 +36,8 @@ Draw.loadPlugin(function(ui) {
             var pos = theGraph.getInsertPoint();
             const lastMouseX = theGraph.lastMouseX;
             const lastMouseY = theGraph.lastMouseY;
-            console.log({ pos, theGraph, obj: this, lastMouseX, lastMouseY });
+            const getInsertPoint = theGraph.getInsertPoint();
+            console.log({ getInsertPoint, pos, theGraph, obj: this, lastMouseX, lastMouseY });
             var newElement=new mxCell("",
                 new mxGeometry(lastMouseX, lastMouseY, 80, 80),
                 "ellipse;whiteSpace=wrap;html=1;");
