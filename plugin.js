@@ -113,7 +113,7 @@ Draw.loadPlugin(function (ui) {
             'horizontal=1;startSize=26;horizontalStack=0',
             'resizeParent=1;resizeLast=0;collapsible=1',
             'marginBottom=0;swimlaneFillColor=#ffffff;shadow=1',
-            'gradientColor=none'
+            'gradientColor=none;html=1'
         ].join(';');
         // const style = "ellipse;whiteSpace=wrap;html=1;";
         var theGraph = ui.editor.graph;
