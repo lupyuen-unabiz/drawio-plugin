@@ -48,11 +48,17 @@ function fetchData(): Promise<rssiRecord[]> {
 }
 
 let chartObj: Chart = null;
+let chartError = false;
 
 function initChart(canvas: HTMLCanvasElement): void {
   //  Init the chart data.
-  if (chartObj) return;
+  if (chartObj || chartError) return;
   const ctx = canvas.getContext('2d');
+  if (!Chart) {
+    console.error('chartjs not installed');
+    chartError = true;
+    return;
+  }
   console.log('initChart - create chart');
   chartObj = new Chart(ctx, {
     type: 'bar',

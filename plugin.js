@@ -37,11 +37,17 @@ function fetchData() {
     });
 }
 var chartObj = null;
+var chartError = false;
 function initChart(canvas) {
     //  Init the chart data.
-    if (chartObj)
+    if (chartObj || chartError)
         return;
     var ctx = canvas.getContext('2d');
+    if (!Chart) {
+        console.error('chartjs not installed');
+        chartError = true;
+        return;
+    }
     console.log('initChart - create chart');
     chartObj = new Chart(ctx, {
         type: 'bar',
