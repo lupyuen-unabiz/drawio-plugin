@@ -75,6 +75,62 @@ function mxToHTML(mxX, mxY, translateX, translateY, scale) {
     var htmlY = (mxY + translateY) * scale;
     return { htmlX: htmlX, htmlY: htmlY };
 }
+function recordRSSI(graph, rssiData, layerX, layerY) {
+    //  Plot a box of RSSI data on the clicked point.
+    //  Compute dimensions of parent.
+    var startSize = 50;
+    var childHeight = 30;
+    var parentWidth = 154;
+    var parentHeight = startSize + childHeight * (rssiData.length - 1);
+    //  Get the graph view parameters.
+    var scale = graph.view.scale;
+    var translateX = graph.view.translate.x;
+    var translateY = graph.view.translate.y;
+    var _a = htmlToMX(layerX, layerY, translateX, translateY, scale), x = _a.x, y = _a.y;
+    // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
+    //  Create parent.
+    var parentGeometry = new mxGeometry(x, y, parentWidth, parentHeight);
+    //  Set the collapsed parent dimensions.
+    parentGeometry.alternateBounds = { x: x, y: y, width: parentWidth, height: startSize };
+    var parentColor = rssiData[0].color;
+    var parentStyle = [
+        'swimlane;fontStyle=1;childLayout=stackLayout',
+        "horizontal=1;startSize=" + startSize + ";horizontalStack=0",
+        'resizeParent=1;resizeLast=0;collapsible=1',
+        "marginBottom=0;swimlaneFillColor=" + parentColor + ";shadow=1",
+        'gradientColor=none;opacity=50'
+    ].join(';');
+    var parentId = 'rssi' + Date.now();
+    var parentRec = rssiData.filter(function (rec) { return (rec.bs === 'overall'); })[0];
+    var parentRSSI = parentRec.rssi;
+    var datetime = parentRec.localdatetime;
+    var parentValue = "RSSI " + parentRSSI + " dBm\n" + datetime;
+    var parent = new mxCell(parentValue, parentGeometry, parentStyle);
+    parent.vertex = !0;
+    parent.setId(parentId);
+    var childY = startSize;
+    //  Create child for each record.
+    rssiData.filter(function (rec) { return (rec.bs !== 'overall'); })
+        .forEach(function (rec) {
+        //  bs = '1234', rssi = -88, color = '#203040';
+        var childId = "child_" + rec.bs + "_" + Date.now();
+        var childValue = "BS " + rec.bs + ": " + ((rec.rssi <= -100) ? rec.rssi : (' ' + rec.rssi)) + " dBm";
+        var childGeometry = new mxGeometry(0, childY, parentWidth, childHeight);
+        var childStyle = [
+            'text;strokeColor=none',
+            "fillColor=" + rec.color + ";opacity=50",
+            'shadow=1;align=center;verticalAlign=middle',
+            'fontStyle=1;fontColor=#FFFFFF'
+        ].join(';');
+        var child = new mxCell(childValue, childGeometry, childStyle);
+        child.vertex = !0;
+        child.setId(childId);
+        parent.insert(child);
+        childY += childHeight;
+    });
+    //  Add the parent.
+    graph.setSelectionCell(graph.addCell(parent));
+}
 Draw.loadPlugin(function (ui) {
     var layerX = 0;
     var layerY = 0;
@@ -152,59 +208,7 @@ Draw.loadPlugin(function (ui) {
                 { bs: '123C', rssi: -108, color: '#604080', localdatetime: '2017-12-03 04:15' },
                 { bs: '12EF', rssi: -118, color: '#a04080', localdatetime: '2017-12-03 04:15' },
             ];
-            //  Compute dimensions of parent.
-            var startSize = 50;
-            var childHeight_1 = 30;
-            var parentWidth_1 = 154;
-            var parentHeight = startSize + childHeight_1 * (rssiData.length - 1);
-            //  Get the graph view parameters.
-            var scale = graph.view.scale;
-            var translateX = graph.view.translate.x;
-            var translateY = graph.view.translate.y;
-            var _a = htmlToMX(layerX, layerY, translateX, translateY, scale), x = _a.x, y = _a.y;
-            // console.log({ x, y, layerX, layerY, scale, translateX, translateY, theGraph, obj: this});
-            //  Create parent.
-            var parentGeometry = new mxGeometry(x, y, parentWidth_1, parentHeight);
-            //  Set the collapsed parent dimensions.
-            parentGeometry.alternateBounds = { x: x, y: y, width: parentWidth_1, height: startSize };
-            var parentColor = rssiData[0].color;
-            var parentStyle = [
-                'swimlane;fontStyle=1;childLayout=stackLayout',
-                "horizontal=1;startSize=" + startSize + ";horizontalStack=0",
-                'resizeParent=1;resizeLast=0;collapsible=1',
-                "marginBottom=0;swimlaneFillColor=" + parentColor + ";shadow=1",
-                'gradientColor=none;opacity=50'
-            ].join(';');
-            var parentId = 'rssi' + Date.now();
-            var parentRec = rssiData.filter(function (rec) { return (rec.bs === 'overall'); })[0];
-            var parentRSSI = parentRec.rssi;
-            var datetime = parentRec.localdatetime;
-            var parentValue = "RSSI " + parentRSSI + " dBm\n" + datetime;
-            var parent_1 = new mxCell(parentValue, parentGeometry, parentStyle);
-            parent_1.vertex = !0;
-            parent_1.setId(parentId);
-            var childY_1 = startSize;
-            //  Create child for each record.
-            rssiData.filter(function (rec) { return (rec.bs !== 'overall'); })
-                .forEach(function (rec) {
-                //  bs = '1234', rssi = -88, color = '#203040';
-                var childId = "child_" + rec.bs + "_" + Date.now();
-                var childValue = "BS " + rec.bs + ": " + ((rec.rssi <= -100) ? rec.rssi : (' ' + rec.rssi)) + " dBm";
-                var childGeometry = new mxGeometry(0, childY_1, parentWidth_1, childHeight_1);
-                var childStyle = [
-                    'text;strokeColor=none',
-                    "fillColor=" + rec.color + ";opacity=50",
-                    'shadow=1;align=center;verticalAlign=middle',
-                    'fontStyle=1;fontColor=#FFFFFF'
-                ].join(';');
-                var child = new mxCell(childValue, childGeometry, childStyle);
-                child.vertex = !0;
-                child.setId(childId);
-                parent_1.insert(child);
-                childY_1 += childHeight_1;
-            });
-            //  Add the parent.
-            graph.setSelectionCell(graph.addCell(parent_1));
+            recordRSSI(graph, rssiData, layerX, layerY);
         }
     }, null, null, "Ctrl+ShiftR");
     ui.keyHandler.bindAction(81, !0, "recordRSSI", !0);
