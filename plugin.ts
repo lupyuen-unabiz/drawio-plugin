@@ -164,11 +164,11 @@ function recordRSSI(graph: any, rssiData: rssiRecord[], layerX: number, layerY: 
   //  Add the info box.
   const infoRec = parentRec;
   const infoId = `info${Date.now()}`;
-  const infoValue = `${infoRec.device} - ${infoRec.seqNumber} - ${infoRec.baseStationSecond}`;
+  const infoValue = `${infoRec.device} - ${infoRec.seqNumber} - \n${infoRec.baseStationSecond}`;
   const infoGeometry = new mxGeometry(0, childY, parentWidth, infoHeight);
   const infoStyle = [
     'text;strokeColor=none',
-    `fillColor=#202020;opacity=50`,
+    `fillColor=#202020;opacity=40`,
     'shadow=1;align=center;verticalAlign=middle',
     'fontColor=#ffffff'
   ].join(';');

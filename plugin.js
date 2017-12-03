@@ -139,11 +139,11 @@ function recordRSSI(graph, rssiData, layerX, layerY) {
     //  Add the info box.
     var infoRec = parentRec;
     var infoId = "info" + Date.now();
-    var infoValue = infoRec.device + " - " + infoRec.seqNumber + " - " + infoRec.baseStationSecond;
+    var infoValue = infoRec.device + " - " + infoRec.seqNumber + " - \n" + infoRec.baseStationSecond;
     var infoGeometry = new mxGeometry(0, childY, parentWidth, infoHeight);
     var infoStyle = [
         'text;strokeColor=none',
-        "fillColor=#202020;opacity=50",
+        "fillColor=#202020;opacity=40",
         'shadow=1;align=center;verticalAlign=middle',
         'fontColor=#ffffff'
     ].join(';');
