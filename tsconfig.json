@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "module": "es6",
     "target": "es5",
     "sourceMap": true
   },
   "include": [
-    "./mxgraph/"
+    "./mxgraph/**/*.js"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./plugin.js"
   ]
 }

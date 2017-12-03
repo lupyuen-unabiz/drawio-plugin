@@ -5,16 +5,17 @@
  */
 // import { mxEditor } from './mxgraph/editor/mxEditor';
 var deviceID = '2C30EB';
-var dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
+// const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
+var dataURL = "https://unabelldemo.au.meteorapp.com/rssidata/" + deviceID;
 var frameURL = "https://unabelldemo.au.meteorapp.com/done/" + deviceID;
 var frameID = 'UnaRadarFrame';
 var frameHandleWidth = 20;
-var mxApp = (function () {
+var mxApp = /** @class */ (function () {
     function mxApp() {
     }
     return mxApp;
 }());
-var rssiRecord = (function () {
+var rssiRecord = /** @class */ (function () {
     function rssiRecord() {
     }
     return rssiRecord;

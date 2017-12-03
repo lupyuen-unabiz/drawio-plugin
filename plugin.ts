@@ -7,7 +7,8 @@
 // import { mxEditor } from './mxgraph/editor/mxEditor';
 
 const deviceID = '2C30EB';
-const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
+// const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
+const dataURL = `https://unabelldemo.au.meteorapp.com/rssidata/${deviceID}`;
 const frameURL = `https://unabelldemo.au.meteorapp.com/done/${deviceID}`;
 const frameID = 'UnaRadarFrame';
 const frameHandleWidth = 20;
