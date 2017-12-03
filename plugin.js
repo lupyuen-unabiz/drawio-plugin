@@ -1,7 +1,8 @@
 /**
  * A draw.io plugin for inserting a custom text (or ellipse) element,
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
- https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
+ https://unabelldemo.au.meteorapp.com/plugin/${deviceID}
+ Originally at https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 // import { mxEditor } from './mxgraph/editor/mxEditor';
 var deviceID = '2C30EB';
@@ -86,8 +87,9 @@ function recordRSSI(graph, rssiData, layerX, layerY) {
     //  Compute dimensions of parent.
     var startSize = 50;
     var childHeight = 30;
+    var infoHeight = 50; //  Info box at bottom.
     var parentWidth = 154;
-    var parentHeight = startSize + childHeight * (rssiData.length - 1);
+    var parentHeight = startSize + infoHeight + childHeight * (rssiData.length - 1);
     //  Get the graph view parameters.
     var scale = graph.view.scale;
     var translateX = graph.view.translate.x;
@@ -106,7 +108,7 @@ function recordRSSI(graph, rssiData, layerX, layerY) {
         "marginBottom=0;swimlaneFillColor=" + parentColor + ";shadow=1",
         'gradientColor=none;opacity=50'
     ].join(';');
-    var parentId = 'rssi' + Date.now();
+    var parentId = "rssi" + Date.now();
     var parentRec = rssiData.filter(function (rec) { return (rec.bs === 'overall'); })[0];
     var parentRSSI = parentRec.rssi;
     var datetime = parentRec.localdatetime;
@@ -134,6 +136,22 @@ function recordRSSI(graph, rssiData, layerX, layerY) {
         parent.insert(child);
         childY += childHeight;
     });
+    //  Add the info box.
+    var infoRec = parentRec;
+    var infoId = "info" + Date.now();
+    var infoValue = infoRec.device + " - " + infoRec.seqNumber + " - " + infoRec.baseStationSecond;
+    var infoGeometry = new mxGeometry(0, childY, parentWidth, infoHeight);
+    var infoStyle = [
+        'text;strokeColor=none',
+        "fillColor=#202020;opacity=50",
+        'shadow=1;align=center;verticalAlign=middle',
+        'fontColor=#ffffff'
+    ].join(';');
+    var info = new mxCell(infoValue, infoGeometry, infoStyle);
+    info.vertex = !0;
+    info.setId(infoId);
+    parent.insert(info);
+    childY += infoHeight;
     //  Add the parent.
     graph.setSelectionCell(graph.addCell(parent));
 }

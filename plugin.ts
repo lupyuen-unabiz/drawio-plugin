@@ -1,7 +1,8 @@
 /**
  * A draw.io plugin for inserting a custom text (or ellipse) element,
  * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
- https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
+ https://unabelldemo.au.meteorapp.com/plugin/${deviceID}
+ Originally at https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
  */
 
 // import { mxEditor } from './mxgraph/editor/mxEditor';
@@ -22,6 +23,10 @@ class mxApp {
 }
 
 class rssiRecord {
+  device: string | undefined;
+  seqNumber: number | undefined;
+  baseStationSecond: number | undefined;
+  baseStationHour: number | undefined;
   bs: string;
   rssi: number;
   color: string;
@@ -101,8 +106,9 @@ function recordRSSI(graph: any, rssiData: rssiRecord[], layerX: number, layerY: 
   //  Compute dimensions of parent.
   const startSize = 50;
   const childHeight = 30;
+  const infoHeight = 50;  //  Info box at bottom.
   const parentWidth = 154;
-  const parentHeight = startSize + childHeight * (rssiData.length - 1);
+  const parentHeight = startSize + infoHeight + childHeight * (rssiData.length - 1);
 
   //  Get the graph view parameters.
   const scale = graph.view.scale;
@@ -123,7 +129,7 @@ function recordRSSI(graph: any, rssiData: rssiRecord[], layerX: number, layerY: 
     `marginBottom=0;swimlaneFillColor=${parentColor};shadow=1`,
     'gradientColor=none;opacity=50'
   ].join(';');
-  const parentId = 'rssi' + Date.now();
+  const parentId = `rssi${Date.now()}`;
   const parentRec = rssiData.filter(rec => (rec.bs === 'overall'))[0];
   const parentRSSI = parentRec.rssi;
   const datetime = parentRec.localdatetime;
@@ -154,6 +160,23 @@ function recordRSSI(graph: any, rssiData: rssiRecord[], layerX: number, layerY: 
       parent.insert(child);
       childY += childHeight;
     });
+
+  //  Add the info box.
+  const infoRec = parentRec;
+  const infoId = `info${Date.now()}`;
+  const infoValue = `${infoRec.device} - ${infoRec.seqNumber} - ${infoRec.baseStationSecond}`;
+  const infoGeometry = new mxGeometry(0, childY, parentWidth, infoHeight);
+  const infoStyle = [
+    'text;strokeColor=none',
+    `fillColor=#202020;opacity=50`,
+    'shadow=1;align=center;verticalAlign=middle',
+    'fontColor=#ffffff'
+  ].join(';');
+  const info = new mxCell(infoValue, infoGeometry, infoStyle);
+  info.vertex = !0;
+  info.setId(infoId);
+  parent.insert(info);
+  childY += infoHeight;
 
   //  Add the parent.
   graph.setSelectionCell(graph.addCell(parent));
