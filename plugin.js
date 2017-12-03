@@ -1,22 +1,20 @@
-/**
- * A draw.io plugin for inserting a custom text (or ellipse) element,
- * either by keyboard Ctrl+Shift+T (or Ctrl+Shift+Q) or by menu
- https://unabelldemo.au.meteorapp.com/plugin/${deviceID}
- Originally at https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js
- */
-// import { mxEditor } from './mxgraph/editor/mxEditor';
+/* A draw.io plugin for inserting a UnaRadar coverage data element,
+either by right click or keyboard Ctrl+Shift+R or by menu.
+Add this plugin to your draw.io file:
+https://unabelldemo.au.meteorapp.com/plugin/${deviceID}
+Originally at https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js */
 var deviceID = '2C30EB';
-// const dataURL = 'https://lupyuen-unabiz.github.io/drawio-plugin/data.json';
 var dataURL = "https://unabelldemo.au.meteorapp.com/rssidata/" + deviceID;
 var frameURL = "https://unabelldemo.au.meteorapp.com/done/" + deviceID;
-var frameID = 'UnaRadarFrame';
+var frameCellID = 'UnaRadarFrame';
 var frameHandleWidth = 20;
-var mxApp = /** @class */ (function () {
+var chartCellID = 'UnaRadarChartFrame';
+var mxApp = (function () {
     function mxApp() {
     }
     return mxApp;
 }());
-var rssiRecord = /** @class */ (function () {
+var rssiRecord = (function () {
     function rssiRecord() {
     }
     return rssiRecord;
@@ -38,46 +36,142 @@ function fetchData() {
         r.send();
     });
 }
-function addFrame(theGraph) {
-    if (!theGraph || !theGraph.model || !theGraph.model.cells
-        || !theGraph.model.cells.UnaRadarFrame
-        || !theGraph.model.cells.UnaRadarFrame.geometry)
+var chartObj = null;
+function initChart(canvas) {
+    //  Init the chart data.
+    if (chartObj)
         return;
-    var view = theGraph.view;
+    var ctx = canvas.getContext('2d');
+    console.log('initChart - create chart');
+    chartObj = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+            }
+        }
+    });
+}
+function addUpdateChart(graph) {
+    //  Add a sample Chart.js chart.  If it exists, update the position and size.
+    if (!graph || !graph.model || !graph.model.cells)
+        return;
+    var canvasCell = graph.model.cells.UnaRadarChartFrame;
+    if (!canvasCell || !canvasCell.geometry)
+        return;
+    //  Get the view info.
+    var view = graph.view;
     var scale = view.scale;
     var translateX = view.translate.x;
     var translateY = view.translate.y;
-    var geometry = theGraph.model.cells.UnaRadarFrame.geometry;
+    //  Transform the cell dimensions into HTML.
+    var geometry = canvasCell.geometry;
     var mxX = geometry.x + frameHandleWidth;
     var mxY = geometry.y;
     var mxWidth = geometry.width - (frameHandleWidth * 2);
     var mxHeight = geometry.height;
     var _a = mxToHTML(mxX, mxY, translateX, translateY, scale), htmlX = _a.htmlX, htmlY = _a.htmlY;
-    var frame = document.getElementById(frameID);
-    if (!frame) {
-        frame = document.createElement('iframe');
-        frame.id = frameID;
-        frame.src = frameURL;
-        frame.scrolling = 'no';
-        frame.allow = 'geolocation; microphone; camera';
-        frame.style.position = 'absolute';
-        frame.style.left = htmlX + 'px';
-        frame.style.top = htmlY + 'px';
-        frame.style.width = (mxWidth * scale) + 'px';
-        frame.style.height = (mxHeight * scale) + 'px';
-        theGraph.container.appendChild(frame);
+    //  Create the HTML Canvas Element if not created.
+    // <canvas id="myChart" width="400" height="400"></canvas>
+    var canvasEl = document.getElementById(chartCellID);
+    if (!canvasEl) {
+        console.log('addUpdateChart = create canvas');
+        canvasEl = document.createElement('canvas');
+        canvasEl.id = chartCellID;
+        canvasEl.style.position = 'absolute';
+        canvasEl.style.left = htmlX + 'px';
+        canvasEl.style.top = htmlY + 'px';
+        canvasEl.style.width = (mxWidth * scale) + 'px';
+        canvasEl.style.height = (mxHeight * scale) + 'px';
+        graph.container.appendChild(canvasEl);
+        initChart(canvasEl);
+        return;
     }
-    frame.style.left = htmlX + 'px';
-    frame.style.top = htmlY + 'px';
-    frame.style.width = (mxWidth * scale) + 'px';
-    frame.style.height = (mxHeight * scale) + 'px';
+    //  Else update the HTML dimensions.
+    canvasEl.style.left = htmlX + 'px';
+    canvasEl.style.top = htmlY + 'px';
+    canvasEl.style.width = (mxWidth * scale) + 'px';
+    canvasEl.style.height = (mxHeight * scale) + 'px';
+}
+function addUpdateFrame(graph) {
+    //  Add the frame for UnaRadar.  If it exists, update the position and size.
+    //  Add or update chart.
+    addUpdateChart(graph);
+    if (!graph || !graph.model || !graph.model.cells)
+        return;
+    var frameCell = graph.model.cells.UnaRadarFrame;
+    if (!frameCell || !frameCell.geometry)
+        return;
+    //  Get the view info.
+    var view = graph.view;
+    var scale = view.scale;
+    var translateX = view.translate.x;
+    var translateY = view.translate.y;
+    //  Transform the cell dimensions into HTML.
+    var geometry = frameCell.geometry;
+    var mxX = geometry.x + frameHandleWidth;
+    var mxY = geometry.y;
+    var mxWidth = geometry.width - (frameHandleWidth * 2);
+    var mxHeight = geometry.height;
+    var _a = mxToHTML(mxX, mxY, translateX, translateY, scale), htmlX = _a.htmlX, htmlY = _a.htmlY;
+    //  Create the HTML Frame Element if not created.
+    var frameEl = document.getElementById(frameCellID);
+    if (!frameEl) {
+        frameEl = document.createElement('iframe');
+        frameEl.id = frameCellID;
+        frameEl.src = frameURL;
+        frameEl.scrolling = 'no';
+        frameEl.allow = 'geolocation; microphone; camera';
+        frameEl.style.position = 'absolute';
+        frameEl.style.left = htmlX + 'px';
+        frameEl.style.top = htmlY + 'px';
+        frameEl.style.width = (mxWidth * scale) + 'px';
+        frameEl.style.height = (mxHeight * scale) + 'px';
+        graph.container.appendChild(frameEl);
+        return;
+    }
+    //  Else update the HTML dimensions.
+    frameEl.style.left = htmlX + 'px';
+    frameEl.style.top = htmlY + 'px';
+    frameEl.style.width = (mxWidth * scale) + 'px';
+    frameEl.style.height = (mxHeight * scale) + 'px';
 }
 function htmlToMX(htmlX, htmlY, translateX, translateY, scale) {
+    //  Convert HTML coordinates to mxGraph/SVG.
     var x = (htmlX / scale) - translateX;
     var y = (htmlY / scale) - translateY;
     return { x: x, y: y };
 }
 function mxToHTML(mxX, mxY, translateX, translateY, scale) {
+    //  Convert mxGraph/SVG coordinates to HTML.
     var htmlX = (mxX + translateX) * scale;
     var htmlY = (mxY + translateY) * scale;
     return { htmlX: htmlX, htmlY: htmlY };
@@ -187,7 +281,7 @@ Draw.loadPlugin(function (ui) {
     */
     ui.editor.graph.addListener(mxEvent.SIZE, function (sender, evt) {
         //  Update the UnaRadar frame upon resize.
-        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 0);
+        window.setTimeout(function () { return addUpdateFrame(ui.editor.graph); }, 0);
     });
     //  Add the click listener to get click position.
     ui.editor.graph.addListener(mxEvent.CLICK, function (sender, evt) {
@@ -202,7 +296,7 @@ Draw.loadPlugin(function (ui) {
             // evt.consume();
         }
         //  Update the UnaRadar frame.
-        window.setTimeout(function () { return addFrame(ui.editor.graph); }, 0);
+        window.setTimeout(function () { return addUpdateFrame(ui.editor.graph); }, 0);
     });
     // Adds popup menu : myInsertText, recordRSSI
     var uiCreatePopupMenu = ui.menus.createPopupMenu;
