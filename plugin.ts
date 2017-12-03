@@ -28,15 +28,21 @@ class rssiRecord {
   localdatetime: string;
 }
 
-function fetchData() {
-  var r = new XMLHttpRequest();
-  r.open("GET", dataURL, true);
-  r.onreadystatechange = function () {
-    if (r.readyState != 4 || r.status != 200) return;
-    console.log(dataURL + ": " + r.responseText);
-  };
-  // r.send("banana=yellow");
-  r.send();
+function fetchData(): Promise<rssiRecord[]> {
+  //  Fetch RSSI data for the device ID:
+  //  http://.../rssidata/2C30EB?seqNumber=3158&baseStationHour=420073&baseStationSecond=1512265643
+  //  Returns a promise.
+  return new Promise((accept, reject) => {
+    const r = new XMLHttpRequest();
+    r.open("GET", dataURL, true);
+    r.onreadystatechange = function () {
+      if (r.readyState != 4 || r.status != 200) return; // reject(new Error(r.responseText));
+      console.log(dataURL + ": " + r.responseText);
+      return accept(JSON.parse(r.responseText));
+    };
+    // r.send("banana=yellow");
+    r.send();
+  });
 }
 
 function addFrame(theGraph: mxGraph): void {
@@ -213,10 +219,7 @@ Draw.loadPlugin(function (ui: mxApp) {
     uiCreatePopupMenu.apply(this, arguments);
     var graph = ui.editor.graph;
     // if (graph.model.isVertex(graph.getSelectionCell()))
-    {
-      // this.addMenuItems(menu, ['-', 'myInsertText'], null, evt);
-      this.addMenuItems(menu, ['-', 'recordRSSI'], null, evt);
-    }
+    this.addMenuItems(menu, ['-', 'recordRSSI'], null, evt);
   };
 
   // Adds action : recordRSSI
@@ -224,20 +227,11 @@ Draw.loadPlugin(function (ui: mxApp) {
     // const style = "ellipse;whiteSpace=wrap;html=1;";
     const graph = ui.editor.graph;
     if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent())) {
-      const localtime = Date.now() + 8 * 60 * 60 * 1000;
-      const localtimestr = new Date(localtime).toISOString().replace('T', ' ')
-        .substr(0, 16);
-
       //  Get data from server.
-      fetchData();
-      const rssiData: rssiRecord[] = [
-        { bs: 'overall', rssi: -88, color: '#204080', localdatetime: '2017-12-03 04:15' },
-        { bs: '1234', rssi: -88, color: '#204080', localdatetime: '2017-12-03 04:15' },
-        { bs: '123A', rssi: -98, color: '#404080', localdatetime: '2017-12-03 04:15' },
-        { bs: '123C', rssi: -108, color: '#604080', localdatetime: '2017-12-03 04:15' },
-        { bs: '12EF', rssi: -118, color: '#a04080', localdatetime: '2017-12-03 04:15' },
-      ];
-      recordRSSI(graph, rssiData, layerX, layerY);
+      return fetchData()
+        //  Add the RSSI box.
+        .then(rssiData => recordRSSI(graph, rssiData, layerX, layerY))
+        .catch((error) => { console.error('recordRSSI', error.message, error.stack); throw error; });
     }
   }, null, null, "Ctrl+ShiftR");
 
@@ -274,3 +268,13 @@ Draw.loadPlugin(function (ui: mxApp) {
   }
 }, null, null, "Ctrl+Shift+T");
 ui.keyHandler.bindAction(84, !0, "myInsertText", !0); */
+
+/* Test Data
+      const rssiData: rssiRecord[] = [
+        { bs: 'overall', rssi: -88, color: '#204080', localdatetime: '2017-12-03 04:15' },
+        { bs: '1234', rssi: -88, color: '#204080', localdatetime: '2017-12-03 04:15' },
+        { bs: '123A', rssi: -98, color: '#404080', localdatetime: '2017-12-03 04:15' },
+        { bs: '123C', rssi: -108, color: '#604080', localdatetime: '2017-12-03 04:15' },
+        { bs: '12EF', rssi: -118, color: '#a04080', localdatetime: '2017-12-03 04:15' },
+      ];
+ */
