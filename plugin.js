@@ -1,7 +1,9 @@
 /* A draw.io plugin for inserting a UnaRadar coverage data element,
 either by right click or keyboard Ctrl+Shift+R or by menu.
-Add this plugin to your draw.io file:
+Add these 2 plugins to your draw.io file:
 https://unabelldemo.au.meteorapp.com/plugin/${deviceID}
+
+
 Originally at https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js */
 var deviceID = '2C30EB';
 var dataURL = "https://unabelldemo.au.meteorapp.com/rssidata/" + deviceID;
@@ -9,12 +11,12 @@ var frameURL = "https://unabelldemo.au.meteorapp.com/done/" + deviceID;
 var frameCellID = 'UnaRadarFrame';
 var frameHandleWidth = 20;
 var chartCellID = 'UnaRadarChartFrame';
-var mxApp = (function () {
+var mxApp = /** @class */ (function () {
     function mxApp() {
     }
     return mxApp;
 }());
-var rssiRecord = (function () {
+var rssiRecord = /** @class */ (function () {
     function rssiRecord() {
     }
     return rssiRecord;
@@ -76,6 +78,10 @@ function initChart(canvas) {
                 }]
         },
         options: {
+            responsiveAnimationDuration: 5000,
+            animation: {
+                duration: 5000
+            },
             scales: {
                 yAxes: [{
                         ticks: {

@@ -1,7 +1,9 @@
 /* A draw.io plugin for inserting a UnaRadar coverage data element,
 either by right click or keyboard Ctrl+Shift+R or by menu.
-Add this plugin to your draw.io file:
+Add these 2 plugins to your draw.io file:
 https://unabelldemo.au.meteorapp.com/plugin/${deviceID}
+
+
 Originally at https://lupyuen-unabiz.github.io/drawio-plugin/plugin.js */
 
 const deviceID = '2C30EB';
@@ -87,6 +89,10 @@ function initChart(canvas: HTMLCanvasElement): void {
       }]
     },
     options: {
+      responsiveAnimationDuration: 5000,
+      animation: {
+        duration: 5000
+      },
       scales: {
         yAxes: [{
           ticks: {
