@@ -106,7 +106,7 @@ function recordRSSI(graph: any, rssiData: rssiRecord[], layerX: number, layerY: 
   //  Compute dimensions of parent.
   const startSize = 50;
   const childHeight = 30;
-  const infoHeight = 50;  //  Info box at bottom.
+  const infoHeight = 30;  //  Info box at bottom.
   const parentWidth = 154;
   const parentHeight = startSize + infoHeight + childHeight * (rssiData.length - 1);
 
@@ -170,7 +170,7 @@ function recordRSSI(graph: any, rssiData: rssiRecord[], layerX: number, layerY: 
     'text;strokeColor=none',
     `fillColor=#202020;opacity=40`,
     'shadow=1;align=center;verticalAlign=middle',
-    'fontColor=#ffffff'
+    'fontColor=#ffffff;fontStyle=2;fontSize=10'
   ].join(';');
   const info = new mxCell(infoValue, infoGeometry, infoStyle);
   info.vertex = !0;
